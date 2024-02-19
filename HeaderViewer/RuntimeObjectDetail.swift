@@ -120,17 +120,13 @@ struct SemanticRunView: View {
                 Text(run.string)
                     .foregroundColor(.cyan)
             case .class:
-                Button {
-                    print("Clicked class:", run.string)
-                } label: {
+                NavigationLink(value: RuntimeObjectType.class(named: run.string)) {
                     Text(run.string)
                         .foregroundColor(.mint)
                 }
                 .buttonStyle(.plain)
             case .protocol:
-                Button {
-                    print("Clicked protocol:", run.string)
-                } label: {
+                NavigationLink(value: RuntimeObjectType.protocol(named: run.string)) {
                     Text(run.string)
                         .foregroundColor(.teal)
                 }

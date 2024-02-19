@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MachO.dyld
-import ObjectiveC.runtime
 import ClassDump
 import Combine
 
@@ -172,11 +171,16 @@ struct ContentView: View {
                 }
             }
         } detail: {
-            if let selectedObject {
-                RuntimeObjectDetail(type: selectedObject)
-            } else {
-                Text("Select a class or protocol")
-                    .scenePadding()
+            NavigationStack {
+                if let selectedObject {
+                    RuntimeObjectDetail(type: selectedObject)
+                        .navigationDestination(for: RuntimeObjectType.self) { object in
+                            RuntimeObjectDetail(type: object)
+                        }
+                } else {
+                    Text("Select a class or protocol")
+                        .scenePadding()
+                }
             }
         }
     }
