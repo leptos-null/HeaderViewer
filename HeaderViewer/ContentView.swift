@@ -13,16 +13,12 @@ import Combine
 
 extension CDUtilities {
     class func imageNames() -> [String] {
-        var imageCount: UInt32 = 0
-        let imageNames = objc_copyImageNames(&imageCount)
-        
-        let names = sequence(first: imageNames) { $0.successor() }
-            .prefix(Int(imageCount))
-            .map { String(cString: $0.pointee) }
-        
-        imageNames.deallocate()
-        
-        return names
+        (0...)
+            .lazy
+            .map(_dyld_get_image_name)
+            .prefix { $0 != nil }
+            .compactMap { $0 }
+            .map { String(cString: $0) }
     }
     
     class func protocolNames() -> [String] {
