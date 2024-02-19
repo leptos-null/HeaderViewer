@@ -23,127 +23,149 @@ struct RuntimeObjectDetail: View {
     }
     
     var body: some View {
-        SemanticStringView(semanticString: semanticString)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(type.name)
-    }
-}
-
-private struct SemanticStringView {
-    let semanticString: CDSemanticString
-}
-
-#if false
-#elseif canImport(UIKit)
-extension SemanticStringView: UIViewRepresentable {
-    func makeUIView(context: Context) -> UITextView {
-        let textView = UITextView()
-        textView.isEditable = false
-        textView.isSelectable = true
-        textView.linkTextAttributes = [
-            .foregroundColor: UIColor.systemTeal
-        ] // TODO: text view inside of scroll view
-        return textView
-    }
-    
-    func updateUIView(_ textView: UITextView, context: Context) {
-        let preferredFont = UIFont.preferredFont(forTextStyle: .body, compatibleWith: textView.traitCollection)
-        
-        var baseAttributes = AttributeContainer()
-        baseAttributes.foregroundColor = UIColor.label
-        baseAttributes.font = UIFont.monospacedSystemFont(ofSize: preferredFont.pointSize, weight: .regular)
-        textView.attributedText = NSAttributedString(semanticString.attributedString(baseAttributes: baseAttributes))
-    }
-}
-
-private extension CDSemanticString { // UIKit attributes
-    func attributedString(baseAttributes: AttributeContainer) -> AttributedString {
-        var ret = AttributedString()
-        enumerateTypes { str, type in
-            // struct, so this is copied each time
-            var attributeContainer = baseAttributes
-            switch type {
-            case .standard:
-                break
-            case .comment:
-                attributeContainer.foregroundColor = UIColor.systemGray
-            case .keyword:
-                attributeContainer.foregroundColor = UIColor.systemPink
-            case .variable:
-                break
-            case .recordName:
-                attributeContainer.foregroundColor = UIColor.systemCyan
-            case .class:
-                attributeContainer.foregroundColor = UIColor.systemTeal
-                // TODO: link handling
-            case .protocol:
-                attributeContainer.foregroundColor = UIColor.systemTeal
-                // TODO: link handling
-            case .numeric:
-                attributeContainer.foregroundColor = UIColor.systemPurple
-            default:
-                break
-            }
-            ret.append(AttributedString(str, attributes: attributeContainer))
-        }
-        return ret
-    }
-}
-
-//#elseif canImport(AppKit)
-#else
-
-extension SemanticStringView: View {
-    private var textView: Text {
-        var ret = Text(verbatim: "")
-        semanticString.enumerateTypes { str, type in
-            switch type {
-            case .standard:
-                ret = ret + Text(verbatim: str)
-            case .comment:
-                ret = ret + Text(verbatim: str)
-                    .foregroundColor(.gray)
-            case .keyword:
-                ret = ret + Text(verbatim: str)
-                    .foregroundColor(.pink)
-            case .variable:
-                ret = ret + Text(verbatim: str)
-            case .recordName:
-                ret = ret + Text(verbatim: str)
-                    .foregroundColor(.cyan)
-            case .class:
-                ret = ret + Text(verbatim: str)
-                    .foregroundColor(.orange)
-            case .protocol:
-                ret = ret + Text(verbatim: str)
-                    .foregroundColor(.teal)
-            case .numeric:
-                ret = ret + Text(verbatim: str)
-                    .foregroundColor(.purple)
-            default:
-                ret = ret + Text(verbatim: str)
-            }
-        }
-        return ret
-            .font(.body.monospaced())
-    }
-    
-    var body: some View {
         GeometryReader { geomProxy in
             ScrollView([.horizontal, .vertical]) {
-                textView
-                    .textSelection(.enabled)
-                    .multilineTextAlignment(.leading)
-                    .scenePadding()
-                    .frame(
-                        minWidth: geomProxy.size.width, maxWidth: .infinity,
-                        minHeight: geomProxy.size.height, maxHeight: .infinity,
-                        alignment: .topLeading
-                    )
+                let lines = semanticString.splitLines()
+                // this is inefficient:
+                // having to recalculate length on each call
+                let longestLine = lines.max { lhs, rhs in
+                    lhs.length < rhs.length
+                }
+                ZStack(alignment: .leading) {
+                    // use the longest line to expand the view as much as needed
+                    // without having to render all the lines
+                    if let longestLine {
+                        SemanticLineView(line: longestLine)
+                            .opacity(0)
+                    }
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(lines) { line in
+                            SemanticLineView(line: line)
+                        }
+                    }
+                }
+                .font(.body.monospaced())
+                .textSelection(.enabled)
+                .multilineTextAlignment(.leading)
+                .scenePadding()
+                .frame(
+                    minWidth: geomProxy.size.width, maxWidth: .infinity,
+                    minHeight: geomProxy.size.height, maxHeight: .infinity,
+                    alignment: .topLeading
+                )
             }
             .animation(.snappy, value: geomProxy.size)
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(type.name)
     }
 }
 
-#endif
+struct SemanticLine: Identifiable {
+    let number: Int
+    let content: [SemanticRun]
+    
+    var id: Int { number }
+}
+
+struct SemanticRun: Identifiable {
+    // it is the caller's responsibility to set a unique id relative to the container
+    let id: Int
+    let string: String
+    let type: CDSemanticType
+}
+
+extension SemanticLine { // TODO: remove - this is inefficient
+    var length: Int {
+        content.reduce(into: .zero) { partialResult, run in
+            partialResult += run.string.count
+        }
+    }
+}
+
+struct SemanticLineView: View {
+    let line: SemanticLine
+    
+    var body: some View {
+        HStack(alignment: .lastTextBaseline, spacing: 0) {
+            ForEach(line.content) { run in
+                SemanticRunView(run)
+            }
+        }
+        .padding(.vertical, 1) // effectively line spacing
+    }
+}
+
+struct SemanticRunView: View {
+    let run: SemanticRun
+    
+    init(_ run: SemanticRun) {
+        self.run = run
+    }
+    
+    var body: some View {
+        Group {
+            switch run.type {
+            case .standard:
+                Text(run.string)
+            case .comment:
+                Text(run.string)
+                    .foregroundColor(.gray)
+            case .keyword:
+                Text(run.string)
+                    .foregroundColor(.pink)
+            case .variable:
+                Text(run.string)
+            case .recordName:
+                Text(run.string)
+                    .foregroundColor(.cyan)
+            case .class:
+                Button {
+                    print("Clicked class:", run.string)
+                } label: {
+                    Text(run.string)
+                        .foregroundColor(.mint)
+                }
+                .buttonStyle(.plain)
+            case .protocol:
+                Button {
+                    print("Clicked protocol:", run.string)
+                } label: {
+                    Text(run.string)
+                        .foregroundColor(.teal)
+                }
+                .buttonStyle(.plain)
+            case .numeric:
+                Text(run.string)
+                    .foregroundColor(.purple)
+            default:
+                Text(run.string)
+            }
+        }
+        .lineLimit(1, reservesSpace: true)
+    }
+}
+
+extension CDSemanticString {
+    func splitLines() -> [SemanticLine] {
+        var lines: [SemanticLine] = []
+        
+        var current: [SemanticRun] = []
+        enumerateTypes { str, type in
+            var movingSubstring: String = str
+            while let lineBreakIndex = movingSubstring.firstIndex(of: "\n") {
+                current.append(SemanticRun(id: current.count, string: String(movingSubstring[..<lineBreakIndex]), type: type))
+                
+                lines.append(SemanticLine(number: lines.count, content: current))
+                current = []
+                
+                movingSubstring = String(movingSubstring[movingSubstring.index(after: lineBreakIndex)...])
+            }
+            current.append(SemanticRun(id: current.count, string: movingSubstring, type: type))
+        }
+        if !current.isEmpty {
+            lines.append(SemanticLine(number: lines.count, content: current))
+        }
+        return lines
+    }
+}
