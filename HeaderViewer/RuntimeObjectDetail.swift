@@ -23,30 +23,78 @@ struct RuntimeObjectDetail: View {
     }
     
     var body: some View {
-        GeometryReader { geomProxy in
-            ScrollView([.horizontal, .vertical]) {
-                SemanticStringView(semanticString: semanticString)
-                    .textSelection(.enabled)
-                    .multilineTextAlignment(.leading)
-                    .scenePadding()
-                    .frame(
-                        minWidth: geomProxy.size.width, maxWidth: .infinity,
-                        minHeight: geomProxy.size.height, maxHeight: .infinity,
-                        alignment: .topLeading
-                    )
-            }
-            .animation(.snappy, value: geomProxy.size)
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(type.name)
-        
+        SemanticStringView(semanticString: semanticString)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(type.name)
     }
 }
 
-private struct SemanticStringView: View {
+private struct SemanticStringView {
     let semanticString: CDSemanticString
+}
+
+#if false
+#elseif canImport(UIKit)
+extension SemanticStringView: UIViewRepresentable {
+    func makeUIView(context: Context) -> UITextView {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.isSelectable = true
+        textView.linkTextAttributes = [
+            .foregroundColor: UIColor.systemTeal
+        ] // TODO: text view inside of scroll view
+        return textView
+    }
     
-    var body: Text {
+    func updateUIView(_ textView: UITextView, context: Context) {
+        let preferredFont = UIFont.preferredFont(forTextStyle: .body, compatibleWith: textView.traitCollection)
+        
+        var baseAttributes = AttributeContainer()
+        baseAttributes.foregroundColor = UIColor.label
+        baseAttributes.font = UIFont.monospacedSystemFont(ofSize: preferredFont.pointSize, weight: .regular)
+        textView.attributedText = NSAttributedString(semanticString.attributedString(baseAttributes: baseAttributes))
+    }
+}
+
+private extension CDSemanticString { // UIKit attributes
+    func attributedString(baseAttributes: AttributeContainer) -> AttributedString {
+        var ret = AttributedString()
+        enumerateTypes { str, type in
+            // struct, so this is copied each time
+            var attributeContainer = baseAttributes
+            switch type {
+            case .standard:
+                break
+            case .comment:
+                attributeContainer.foregroundColor = UIColor.systemGray
+            case .keyword:
+                attributeContainer.foregroundColor = UIColor.systemPink
+            case .variable:
+                break
+            case .recordName:
+                attributeContainer.foregroundColor = UIColor.systemCyan
+            case .class:
+                attributeContainer.foregroundColor = UIColor.systemTeal
+                // TODO: link handling
+            case .protocol:
+                attributeContainer.foregroundColor = UIColor.systemTeal
+                // TODO: link handling
+            case .numeric:
+                attributeContainer.foregroundColor = UIColor.systemPurple
+            default:
+                break
+            }
+            ret.append(AttributedString(str, attributes: attributeContainer))
+        }
+        return ret
+    }
+}
+
+//#elseif canImport(AppKit)
+#else
+
+extension SemanticStringView: View {
+    private var textView: Text {
         var ret = Text(verbatim: "")
         semanticString.enumerateTypes { str, type in
             switch type {
@@ -79,4 +127,23 @@ private struct SemanticStringView: View {
         return ret
             .font(.body.monospaced())
     }
+    
+    var body: some View {
+        GeometryReader { geomProxy in
+            ScrollView([.horizontal, .vertical]) {
+                textView
+                    .textSelection(.enabled)
+                    .multilineTextAlignment(.leading)
+                    .scenePadding()
+                    .frame(
+                        minWidth: geomProxy.size.width, maxWidth: .infinity,
+                        minHeight: geomProxy.size.height, maxHeight: .infinity,
+                        alignment: .topLeading
+                    )
+            }
+            .animation(.snappy, value: geomProxy.size)
+        }
+    }
 }
+
+#endif
