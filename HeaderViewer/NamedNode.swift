@@ -10,7 +10,7 @@ import Foundation
 final class NamedNode {
     let name: String
     weak var parent: NamedNode?
-
+    
     private var children: [NamedNode] = []
     
     init(_ name: String, parent: NamedNode? = nil) {
