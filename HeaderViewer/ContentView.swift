@@ -132,32 +132,32 @@ struct ContentView: View {
 extension CDSemanticString {
     func swiftText() -> Text {
         var ret = Text(verbatim: "")
-        self.enumerateTypes { str, type in
+        enumerateTypes { str, type in
             switch type {
             case .standard:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
             case .comment:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
                     .foregroundColor(.gray)
             case .keyword:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
                     .foregroundColor(.pink)
             case .variable:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
             case .recordName:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
                     .foregroundColor(.cyan)
             case .class:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
                     .foregroundColor(.orange)
             case .protocol:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
                     .foregroundColor(.teal)
             case .numeric:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
                     .foregroundColor(.purple)
             default:
-                ret = ret + Text(verbatim: str!)
+                ret = ret + Text(verbatim: str)
             }
         }
         return ret
