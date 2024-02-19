@@ -11,7 +11,7 @@ final class NamedNode {
     let name: String
     weak var parent: NamedNode?
     
-    private var children: [NamedNode] = []
+    private(set) var children: [NamedNode] = []
     
     init(_ name: String, parent: NamedNode? = nil) {
         self.parent = parent
@@ -33,5 +33,16 @@ final class NamedNode {
         let child = NamedNode(name, parent: self)
         children.append(child)
         return child
+    }
+}
+
+extension NamedNode: Hashable {
+    static func == (lhs: NamedNode, rhs: NamedNode) -> Bool {
+        lhs.name == rhs.name && lhs.parent === rhs.parent
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(parent)
     }
 }
