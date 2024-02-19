@@ -44,6 +44,17 @@ enum RuntimeObjectType: Hashable, Identifiable {
     var id: Self { self }
 }
 
+extension RuntimeObjectType {
+    var name: String {
+        switch self {
+        case .class(let name):
+            return name
+        case .protocol(let name):
+            return name
+        }
+    }
+}
+
 struct RuntimeObjectRow: View {
     let type: RuntimeObjectType
     
@@ -61,20 +72,11 @@ struct RuntimeObjectRow: View {
         }
     }
     
-    private var rowTitle: String {
-        switch type {
-        case .class(let named):
-            return named
-        case .protocol(let named):
-            return named
-        }
-    }
-    
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             Image(systemName: systemImageName)
                 .foregroundColor(iconColor)
-            Text(rowTitle)
+            Text(type.name)
             Spacer()
         }
     }
@@ -82,15 +84,6 @@ struct RuntimeObjectRow: View {
 
 struct RuntimeObjectDetail: View {
     let type: RuntimeObjectType
-    
-    private var title: String {
-        switch type {
-        case .class(let named):
-            return named
-        case .protocol(let named):
-            return named
-        }
-    }
     
     private var semanticString: CDSemanticString {
         switch type {
@@ -120,7 +113,7 @@ struct RuntimeObjectDetail: View {
             .animation(.snappy, value: geomProxy.size)
         }
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(title)
+        .navigationTitle(type.name)
         
     }
 }
@@ -165,15 +158,28 @@ final class ObjcRuntime: ObservableObject {
     }
 }
 
+private enum RuntimeTypeSearchScope: Hashable {
+    case all
+    case classes
+    case protocols
+}
+
 struct ContentView: View {
     @StateObject private var objc: ObjcRuntime = .shared
     @State private var selectedObject: RuntimeObjectType?
+    @State private var searchString: String = ""
+    @State private var searchScope: RuntimeTypeSearchScope = .all
     
     private var runtimeObjects: [RuntimeObjectType] {
         var ret: [RuntimeObjectType] = []
-        ret += objc.classList.map { .class(named: $0) }
-        ret += objc.protocolList.map { .protocol(named: $0) }
-        return ret
+        if searchScope != .protocols {
+            ret += objc.classList.map { .class(named: $0) }
+        }
+        if searchScope != .classes {
+            ret += objc.protocolList.map { .protocol(named: $0) }
+        }
+        if searchString.isEmpty { return ret }
+        return ret.filter { $0.name.localizedCaseInsensitiveContains(searchString) }
     }
     
     var body: some View {
@@ -181,7 +187,16 @@ struct ContentView: View {
             List(runtimeObjects, selection: $selectedObject) { runtimeObject in
                 RuntimeObjectRow(type: runtimeObject)
             }
-            .id(objc.classList) // don't try to diff the List
+            .id(runtimeObjects) // don't try to diff the List
+            .searchable(text: $searchString)
+            .searchScopes($searchScope) {
+                Text("All")
+                    .tag(RuntimeTypeSearchScope.all)
+                Text("Classes")
+                    .tag(RuntimeTypeSearchScope.classes)
+                Text("Protocols")
+                    .tag(RuntimeTypeSearchScope.protocols)
+            }
             .navigationTitle("Header Viewer")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
