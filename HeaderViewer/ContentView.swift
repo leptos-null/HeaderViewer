@@ -35,6 +35,27 @@ extension CDUtilities {
         
         return names
     }
+    
+    class func classNamesIn(image: String) -> [String] {
+        patchImagePathForDYLD(image).withCString(encodedAs: Unicode.UTF8.self) { cString in
+            var classCount: UInt32 = 0
+            guard let classNames = objc_copyClassNamesForImage(cString, &classCount) else { return [] }
+            
+            let names = sequence(first: classNames) { $0.successor() }
+                .prefix(Int(classCount))
+                .map { String(cString: $0.pointee) }
+            
+            classNames.deallocate()
+            
+            return names
+        }
+    }
+    
+    class func patchImagePathForDYLD(_ imagePath: String) -> String {
+        let rootPath = ProcessInfo.processInfo.environment["DYLD_ROOT_PATH"]
+        guard let rootPath else { return imagePath }
+        return rootPath.appending(imagePath)
+    }
 }
 
 final class ObjcRuntime: ObservableObject {
@@ -100,28 +121,57 @@ struct ContentView: View {
         return ret.filter { $0.name.localizedCaseInsensitiveContains(searchString) }
     }
     
+    private var dyldSharedCacheImageRootNode: NamedNode {
+        let root = NamedNode("")
+        for path in CDUtilities.dyldSharedCacheImagePaths() {
+            var current = root
+            for pathComponent in path.split(separator: "/") {
+                switch pathComponent {
+                case ".":
+                    break // current
+                case "..":
+                    if let parent = current.parent {
+                        current = parent
+                    }
+                default:
+                    current = current.child(named: String(pathComponent))
+                }
+            }
+        }
+        return root
+    }
+    
     var body: some View {
         NavigationSplitView {
-            List(runtimeObjects, selection: $selectedObject) { runtimeObject in
-                RuntimeObjectRow(type: runtimeObject)
-            }
-            .id(runtimeObjects) // don't try to diff the List
-            .searchable(text: $searchString)
-            .searchScopes($searchScope) {
-                Text("All")
-                    .tag(RuntimeTypeSearchScope.all)
-                Text("Classes")
-                    .tag(RuntimeTypeSearchScope.classes)
-                Text("Protocols")
-                    .tag(RuntimeTypeSearchScope.protocols)
-            }
-            .navigationTitle("Header Viewer")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        // TODO
-                    } label: {
-                        Label("Browse", systemImage: "folder")
+            NavigationStack {
+                List(runtimeObjects, selection: $selectedObject) { runtimeObject in
+                    RuntimeObjectRow(type: runtimeObject)
+                }
+                .id(runtimeObjects) // don't try to diff the List
+                .searchable(text: $searchString)
+                .searchScopes($searchScope) {
+                    Text("All")
+                        .tag(RuntimeTypeSearchScope.all)
+                    Text("Classes")
+                        .tag(RuntimeTypeSearchScope.classes)
+                    Text("Protocols")
+                        .tag(RuntimeTypeSearchScope.protocols)
+                }
+                .navigationTitle("Header Viewer")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink(value: dyldSharedCacheImageRootNode) {
+                            Label("Browse", systemImage: "folder")
+                        }
+                    }
+                }
+                .navigationDestination(for: NamedNode.self) { namedNode in
+                    if namedNode.isLeaf {
+                        ImageClassPicker(namedNode: namedNode, selection: $selectedObject)
+                            .environmentObject(objc)
+                    } else {
+                        NamedNodeView(node: namedNode)
+                            .environmentObject(objc)
                     }
                 }
             }
@@ -133,5 +183,38 @@ struct ContentView: View {
                     .scenePadding()
             }
         }
+    }
+}
+
+struct ImageClassPicker: View {
+    let namedNode: NamedNode
+    @Binding private var selection: RuntimeObjectType?
+    @State private var searchString: String = ""
+    
+    // we don't read this directly, but when the loaded images change, we would like to know
+    @EnvironmentObject private var objc: ObjcRuntime
+    
+    private var classNames: [String] {
+        CDUtilities.classNamesIn(image: namedNode.path)
+    }
+    
+    init(namedNode: NamedNode, selection: Binding<RuntimeObjectType?>) {
+        self.namedNode = namedNode
+        _selection = selection
+    }
+    
+    private var runtimeObjects: [RuntimeObjectType] {
+        let ret: [RuntimeObjectType] = classNames.map { .class(named: $0) }
+        if searchString.isEmpty { return ret }
+        return ret.filter { $0.name.localizedCaseInsensitiveContains(searchString) }
+    }
+    
+    var body: some View {
+        List(runtimeObjects, selection: $selection) { runtimeObject in
+            RuntimeObjectRow(type: runtimeObject)
+        }
+        .id(runtimeObjects) // don't try to diff the List
+        .searchable(text: $searchString)
+        .navigationTitle(namedNode.name)
     }
 }
