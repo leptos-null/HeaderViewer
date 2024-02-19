@@ -1,0 +1,3 @@
+[submodule "ClassDumpRuntime"]
+	path = ClassDumpRuntime
+	url = git@github.com:leptos-null/ClassDumpRuntime.git

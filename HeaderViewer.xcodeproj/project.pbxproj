@@ -10,14 +10,56 @@
 		FAD661F82B81D1210000D2A6 /* HeaderViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */; };
 		FAD661FA2B81D1210000D2A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD661F92B81D1210000D2A6 /* ContentView.swift */; };
 		FAD661FC2B81D1220000D2A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD661FB2B81D1220000D2A6 /* Assets.xcassets */; };
+		FAE3C1712B81F7B700242A99 /* ClassDump.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD6620C2B81D2990000D2A6 /* ClassDump.framework */; };
+		FAE3C1722B81F7B700242A99 /* ClassDump.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAD6620C2B81D2990000D2A6 /* ClassDump.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		FAD6620B2B81D2990000D2A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FA2A00DC23ADD19D00B52F1D;
+			remoteInfo = ClassDump;
+		};
+		FAD6620D2B81D2990000D2A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FA2A011923AEB15700B52F1D;
+			remoteInfo = ClassDumpTests;
+		};
+		FAE3C16F2B81F7AC00242A99 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = FA2A00DB23ADD19D00B52F1D;
+			remoteInfo = ClassDump;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FAE3C1732B81F7B700242A99 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FAE3C1722B81F7B700242A99 /* ClassDump.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		FA9687E72B82E37E00123476 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FAD661F42B81D1210000D2A6 /* HeaderViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeaderViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderViewerApp.swift; sourceTree = "<group>"; };
 		FAD661F92B81D1210000D2A6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FAD661FB2B81D1220000D2A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FAD661FD2B81D1220000D2A6 /* HeaderViewer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeaderViewer.entitlements; sourceTree = "<group>"; };
+		FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ClassDump.xcodeproj; path = ClassDumpRuntime/ClassDump.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAE3C1712B81F7B700242A99 /* ClassDump.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -34,8 +77,10 @@
 		FAD661EB2B81D1210000D2A6 = {
 			isa = PBXGroup;
 			children = (
+				FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */,
 				FAD661F62B81D1210000D2A6 /* HeaderViewer */,
 				FAD661F52B81D1210000D2A6 /* Products */,
+				FAD6620F2B81D2C90000D2A6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -52,10 +97,27 @@
 			children = (
 				FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */,
 				FAD661F92B81D1210000D2A6 /* ContentView.swift */,
+				FA9687E72B82E37E00123476 /* Info.plist */,
 				FAD661FB2B81D1220000D2A6 /* Assets.xcassets */,
 				FAD661FD2B81D1220000D2A6 /* HeaderViewer.entitlements */,
 			);
 			path = HeaderViewer;
+			sourceTree = "<group>";
+		};
+		FAD662072B81D2990000D2A6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FAD6620C2B81D2990000D2A6 /* ClassDump.framework */,
+				FAD6620E2B81D2990000D2A6 /* ClassDumpTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FAD6620F2B81D2C90000D2A6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -68,10 +130,12 @@
 				FAD661F02B81D1210000D2A6 /* Sources */,
 				FAD661F12B81D1210000D2A6 /* Frameworks */,
 				FAD661F22B81D1210000D2A6 /* Resources */,
+				FAE3C1732B81F7B700242A99 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FAE3C1702B81F7AC00242A99 /* PBXTargetDependency */,
 			);
 			name = HeaderViewer;
 			productName = HeaderViewer;
@@ -104,12 +168,35 @@
 			mainGroup = FAD661EB2B81D1210000D2A6;
 			productRefGroup = FAD661F52B81D1210000D2A6 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = FAD662072B81D2990000D2A6 /* Products */;
+					ProjectRef = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				FAD661F32B81D1210000D2A6 /* HeaderViewer */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		FAD6620C2B81D2990000D2A6 /* ClassDump.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ClassDump.framework;
+			remoteRef = FAD6620B2B81D2990000D2A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FAD6620E2B81D2990000D2A6 /* ClassDumpTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ClassDumpTests.xctest;
+			remoteRef = FAD6620D2B81D2990000D2A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		FAD661F22B81D1210000D2A6 /* Resources */ = {
@@ -133,6 +220,15 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FAE3C1702B81F7AC00242A99 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ClassDump;
+			platformFilter = ios;
+			targetProxy = FAE3C16F2B81F7AC00242A99 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		FAD662012B81D1220000D2A6 /* Debug */ = {
@@ -261,6 +357,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HeaderViewer/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -280,10 +377,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.HeaderViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -299,6 +397,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HeaderViewer/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -318,10 +417,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.HeaderViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
 		};
