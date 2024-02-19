@@ -37,6 +37,95 @@ extension CDUtilities {
     }
 }
 
+enum RuntimeObjectType: Hashable, Identifiable {
+    case `class`(named: String)
+    case `protocol`(named: String)
+    
+    var id: Self { self }
+}
+
+struct RuntimeObjectRow: View {
+    let type: RuntimeObjectType
+    
+    private var systemImageName: String {
+        switch type {
+        case .class: return "c.square.fill"
+        case .protocol: return "p.square.fill"
+        }
+    }
+    
+    private var iconColor: Color {
+        switch type {
+        case .class: return .green
+        case .protocol: return .pink
+        }
+    }
+    
+    private var rowTitle: String {
+        switch type {
+        case .class(let named):
+            return named
+        case .protocol(let named):
+            return named
+        }
+    }
+    
+    var body: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Image(systemName: systemImageName)
+                .foregroundColor(iconColor)
+            Text(rowTitle)
+            Spacer()
+        }
+    }
+}
+
+struct RuntimeObjectDetail: View {
+    let type: RuntimeObjectType
+    
+    private var title: String {
+        switch type {
+        case .class(let named):
+            return named
+        case .protocol(let named):
+            return named
+        }
+    }
+    
+    private var semanticString: CDSemanticString {
+        switch type {
+        case .class(let named):
+            CDClassModel(with: NSClassFromString(named))
+                .semanticLines(withComments: false, synthesizeStrip: true)
+        case .protocol(let named):
+            CDProtocolModel(with: NSProtocolFromString(named))
+                .semanticLines(withComments: false, synthesizeStrip: true)
+        }
+    }
+    
+    var body: some View {
+        GeometryReader { geomProxy in
+            ScrollView([.horizontal, .vertical]) {
+                semanticString
+                    .swiftText()
+                    .textSelection(.enabled)
+                    .multilineTextAlignment(.leading)
+                    .scenePadding()
+                    .frame(
+                        minWidth: geomProxy.size.width, maxWidth: .infinity,
+                        minHeight: geomProxy.size.height, maxHeight: .infinity,
+                        alignment: .topLeading
+                    )
+            }
+            .animation(.snappy, value: geomProxy.size)
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(title)
+        
+    }
+}
+
+
 final class ObjcRuntime: ObservableObject {
     static let shared = ObjcRuntime()
     private static var sharedIfExists: ObjcRuntime?
@@ -78,17 +167,19 @@ final class ObjcRuntime: ObservableObject {
 
 struct ContentView: View {
     @StateObject private var objc: ObjcRuntime = .shared
-    @State private var selectedClass: String?
+    @State private var selectedObject: RuntimeObjectType?
+    
+    private var runtimeObjects: [RuntimeObjectType] {
+        var ret: [RuntimeObjectType] = []
+        ret += objc.classList.map { .class(named: $0) }
+        ret += objc.protocolList.map { .protocol(named: $0) }
+        return ret
+    }
     
     var body: some View {
         NavigationSplitView {
-            List(objc.classList, id: \.self, selection: $selectedClass) { className in
-                HStack(alignment: .firstTextBaseline) {
-                    Image(systemName: "c.square.fill")
-                        .foregroundColor(.green)
-                    Text(className)
-                    Spacer()
-                }
+            List(runtimeObjects, selection: $selectedObject) { runtimeObject in
+                RuntimeObjectRow(type: runtimeObject)
             }
             .id(objc.classList) // don't try to diff the List
             .navigationTitle("Header Viewer")
@@ -102,25 +193,8 @@ struct ContentView: View {
                 }
             }
         } detail: {
-            if let selectedClass {
-                GeometryReader { geomProxy in
-                    ScrollView([.horizontal, .vertical]) {
-                        CDClassModel(with: NSClassFromString(selectedClass))
-                            .semanticLines(withComments: false, synthesizeStrip: true)
-                            .swiftText()
-                            .textSelection(.enabled)
-                            .multilineTextAlignment(.leading)
-                            .scenePadding()
-                            .frame(
-                                minWidth: geomProxy.size.width, maxWidth: .infinity,
-                                minHeight: geomProxy.size.height, maxHeight: .infinity,
-                                alignment: .topLeading
-                            )
-                    }
-                    .animation(.snappy, value: geomProxy.size)
-                }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationTitle(selectedClass)
+            if let selectedObject {
+                RuntimeObjectDetail(type: selectedObject)
             } else {
                 Text("Select a class or protocol")
                     .scenePadding()
