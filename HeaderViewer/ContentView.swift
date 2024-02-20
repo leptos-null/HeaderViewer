@@ -66,7 +66,7 @@ final class ObjcRuntime: ObservableObject {
     private var subscriptions: Set<AnyCancellable> = []
     
     private init() {
-        self.classList = CDUtilities.safeClassNames()
+        self.classList = CDUtilities.classNames()
         self.protocolList = CDUtilities.protocolNames()
         self.imageList = CDUtilities.imageNames()
         
@@ -76,7 +76,7 @@ final class ObjcRuntime: ObservableObject {
             .debounce(for: .milliseconds(15), scheduler: DispatchQueue.main)
             .sink { [weak self] in
                 guard let self else { return }
-                self.classList = CDUtilities.safeClassNames()
+                self.classList = CDUtilities.classNames()
                 self.protocolList = CDUtilities.protocolNames()
                 self.imageList = CDUtilities.imageNames()
             }
