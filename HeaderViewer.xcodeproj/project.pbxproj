@@ -249,10 +249,6 @@
 		FAE3C1702B81F7AC00242A99 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ClassDump;
-			platformFilters = (
-				ios,
-				macos,
-			);
 			targetProxy = FAE3C16F2B81F7AC00242A99 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -404,11 +400,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.HeaderViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2,6,7";
 			};
 			name = Debug;
 		};
@@ -444,11 +440,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.HeaderViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2,6,7";
 			};
 			name = Release;
 		};

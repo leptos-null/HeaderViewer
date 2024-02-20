@@ -27,6 +27,11 @@ struct RuntimeObjectDetail: View {
         SemanticStringView(semanticString)
             .navigationTitle(type.name)
             .navigationBarTitleDisplayMode(.inline)
+#elseif os(visionOS)
+        SemanticStringView(semanticString)
+            .background(.ultraThickMaterial)
+            .navigationTitle(type.name)
+            .navigationBarTitleDisplayMode(.inline)
 #else
         SemanticStringView(semanticString)
             .navigationTitle(type.name)
