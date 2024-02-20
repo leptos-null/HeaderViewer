@@ -23,8 +23,13 @@ struct RuntimeObjectDetail: View {
     }
     
     var body: some View {
+#if os(iOS) || os(watchOS)
         SemanticStringView(semanticString)
-            .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(type.name)
+            .navigationBarTitleDisplayMode(.inline)
+#else
+        SemanticStringView(semanticString)
+            .navigationTitle(type.name)
+#endif
     }
 }

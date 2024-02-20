@@ -154,7 +154,7 @@ struct ContentView: View {
                 }
                 .navigationTitle("Header Viewer")
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItem {
                         NavigationLink(value: dyldSharedCacheImageRootNode) {
                             Label("Browse", systemImage: "folder")
                         }
