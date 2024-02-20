@@ -51,6 +51,13 @@ extension CDUtilities {
         guard let rootPath else { return imagePath }
         return rootPath.appending(imagePath)
     }
+    
+    @discardableResult
+    class func loadImage(at path: String) -> Bool {
+        path.withCString { cString in
+            dlopen(cString, RTLD_LAZY) != nil
+        }
+    }
 }
 
 final class ObjcRuntime: ObservableObject {
@@ -89,6 +96,10 @@ final class ObjcRuntime: ObservableObject {
         _dyld_register_func_for_remove_image { _, _ in
             ObjcRuntime.sharedIfExists?.shouldReloadClassList.send()
         }
+    }
+    
+    func isImageLoaded(path: String) -> Bool {
+        imageList.contains(CDUtilities.patchImagePathForDYLD(path))
     }
 }
 
@@ -191,7 +202,6 @@ struct ImageClassPicker: View {
     @Binding private var selection: RuntimeObjectType?
     @State private var searchString: String = ""
     
-    // we don't read this directly, but when the loaded images change, we would like to know
     @EnvironmentObject private var objc: ObjcRuntime
     
     private var classNames: [String] {
@@ -210,11 +220,38 @@ struct ImageClassPicker: View {
     }
     
     var body: some View {
-        List(runtimeObjects, selection: $selection) { runtimeObject in
-            RuntimeObjectRow(type: runtimeObject)
+        Group {
+            if objc.isImageLoaded(path: namedNode.path) {
+                let runtimeObjects = self.runtimeObjects
+                if runtimeObjects.isEmpty {
+                    VStack {
+                        Text("\(namedNode.name) is loaded however does not appear to contain any classes")
+                            .padding(.top)
+                        Spacer()
+                    }
+                    .scenePadding()
+                } else {
+                    List(runtimeObjects, selection: $selection) { runtimeObject in
+                        RuntimeObjectRow(type: runtimeObject)
+                    }
+                    .id(runtimeObjects) // don't try to diff the List
+                    .searchable(text: $searchString)
+                }
+            } else {
+                VStack {
+                    Text("\(namedNode.name) is not yet loaded")
+                        .padding(.top)
+                    Button {
+                        CDUtilities.loadImage(at: namedNode.path)
+                    } label: {
+                        Text("Load now")
+                    }
+                    .buttonStyle(.bordered)
+                    Spacer()
+                }
+                .scenePadding()
+            }
         }
-        .id(runtimeObjects) // don't try to diff the List
-        .searchable(text: $searchString)
         .navigationTitle(namedNode.name)
     }
 }

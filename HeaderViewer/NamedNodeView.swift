@@ -32,7 +32,7 @@ struct NamedNodeView: View {
                 .contextMenu {
                     if couldLoad(node: child) {
                         Button {
-                            loadImage(at: child.path)
+                            CDUtilities.loadImage(at: child.path)
                         } label: {
                             Label("Load", systemImage: "ellipsis")
                         }
@@ -45,24 +45,6 @@ struct NamedNodeView: View {
     }
     
     private func couldLoad(node: NamedNode) -> Bool {
-        node.isLeaf && !isImageLoaded(node.path)
-    }
-    
-    private func isImageLoaded(_ imagePath: String) -> Bool {
-        objc.imageList.contains(CDUtilities.patchImagePathForDYLD(imagePath))
-    }
-    
-    private func loadImage(at path: String) {
-        let dlStatus: (success: Bool, errorString: String?) = path.withCString { cString in
-            let handle = dlopen(cString, RTLD_LAZY)
-            let errStr = dlerror()
-            if handle != nil { return (true, nil) }
-            guard let errStr else { return (false, nil) }
-            return (false, String(cString: errStr))
-        }
-        guard dlStatus.success else {
-            print("dlopen(\"\(path)\", RTLD_LAZY)", "->", dlStatus.errorString ?? "???")
-            return
-        }
+        node.isLeaf && !objc.isImageLoaded(path: node.path)
     }
 }
