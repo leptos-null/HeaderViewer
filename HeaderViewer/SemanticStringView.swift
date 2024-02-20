@@ -18,17 +18,12 @@ struct SemanticStringView: View {
     var body: some View {
         GeometryReader { geomProxy in
             ScrollView([.horizontal, .vertical]) {
-                let lines = semanticString.semanticLines()
-                // this is inefficient:
-                // having to recalculate length on each call
-                let longestLine = lines.max { lhs, rhs in
-                    lhs.length < rhs.length
-                }
                 ZStack(alignment: .leading) {
                     // use the longest line to expand the view as much as needed
                     // without having to render all the lines
-                    if let longestLine {
-                        SemanticLineView(line: longestLine)
+                    let (lines, longestLineIndex) = semanticString.semanticLines()
+                    if let longestLineIndex {
+                        SemanticLineView(line: lines[longestLineIndex])
                             .opacity(0)
                     }
                     LazyVStack(alignment: .leading, spacing: 0) {
@@ -64,14 +59,6 @@ private struct SemanticRun: Identifiable {
     let id: Int
     let string: String
     let type: CDSemanticType
-}
-
-private extension SemanticLine { // TODO: remove - this is inefficient
-    var length: Int {
-        content.reduce(into: .zero) { partialResult, run in
-            partialResult += run.string.count
-        }
-    }
 }
 
 private struct SemanticRunView: View {
@@ -134,19 +121,29 @@ private struct SemanticLineView: View {
 }
 
 private extension CDSemanticString {
-    func semanticLines() -> [SemanticLine] {
+    func semanticLines() -> (lines: [SemanticLine], longestLineIndex: Int?) {
         var lines: [SemanticLine] = []
+        var longestLineIndex: Int?
+        var longestLineLength: Int = 0
         
         var current: [SemanticRun] = []
+        var currentLineLength = 0
         
         func pushLine() {
-            lines.append(SemanticLine(number: lines.count, content: current))
+            let upcomingIndex = lines.count
+            lines.append(SemanticLine(number: upcomingIndex, content: current))
+            if currentLineLength > longestLineLength {
+                longestLineLength = currentLineLength
+                longestLineIndex = upcomingIndex
+            }
             current = []
+            currentLineLength = 0
         }
         
         enumerateTypes { str, type in
             func pushRun(string: String) {
                 current.append(SemanticRun(id: current.count, string: string, type: type))
+                currentLineLength += string.count
             }
             
             var movingSubstring: String = str
@@ -161,6 +158,6 @@ private extension CDSemanticString {
         if !current.isEmpty {
             pushLine()
         }
-        return lines
+        return (lines, longestLineIndex)
     }
 }
