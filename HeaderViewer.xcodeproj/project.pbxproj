@@ -13,6 +13,7 @@
 		FA9687EF2B833D5F00123476 /* RuntimeObjectRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687EE2B833D5F00123476 /* RuntimeObjectRow.swift */; };
 		FA9687F12B8366B500123476 /* NamedNodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687F02B8366B400123476 /* NamedNodeView.swift */; };
 		FA9687F32B8433B900123476 /* SemanticStringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687F22B8433B900123476 /* SemanticStringView.swift */; };
+		FAAA8C0F2B85788700BD85B4 /* ImageClassPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA8C0E2B85788700BD85B4 /* ImageClassPicker.swift */; };
 		FAD661F82B81D1210000D2A6 /* HeaderViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */; };
 		FAD661FA2B81D1210000D2A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD661F92B81D1210000D2A6 /* ContentView.swift */; };
 		FAD661FC2B81D1220000D2A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD661FB2B81D1220000D2A6 /* Assets.xcassets */; };
@@ -66,6 +67,7 @@
 		FA9687EE2B833D5F00123476 /* RuntimeObjectRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeObjectRow.swift; sourceTree = "<group>"; };
 		FA9687F02B8366B400123476 /* NamedNodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedNodeView.swift; sourceTree = "<group>"; };
 		FA9687F22B8433B900123476 /* SemanticStringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemanticStringView.swift; sourceTree = "<group>"; };
+		FAAA8C0E2B85788700BD85B4 /* ImageClassPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageClassPicker.swift; sourceTree = "<group>"; };
 		FAD661F42B81D1210000D2A6 /* HeaderViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeaderViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderViewerApp.swift; sourceTree = "<group>"; };
 		FAD661F92B81D1210000D2A6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 			children = (
 				FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */,
 				FAD661F92B81D1210000D2A6 /* ContentView.swift */,
+				FAAA8C0E2B85788700BD85B4 /* ImageClassPicker.swift */,
 				FA9687F02B8366B400123476 /* NamedNodeView.swift */,
 				FA9687E82B8338E100123476 /* NamedNode.swift */,
 				FA9687EA2B833C1700123476 /* RuntimeObjectType.swift */,
@@ -232,6 +235,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAAA8C0F2B85788700BD85B4 /* ImageClassPicker.swift in Sources */,
 				FA9687E92B8338E100123476 /* NamedNode.swift in Sources */,
 				FA9687F32B8433B900123476 /* SemanticStringView.swift in Sources */,
 				FA9687ED2B833C3200123476 /* RuntimeObjectDetail.swift in Sources */,
