@@ -13,7 +13,7 @@ struct ImageClassPicker: View {
     @Binding private var selection: RuntimeObjectType?
     @State private var searchString: String = ""
     
-    @EnvironmentObject private var objc: ObjcRuntime
+    @EnvironmentObject private var listings: RuntimeListings
     
     private var classNames: [String] {
         CDUtilities.classNamesIn(image: namedNode.path)
@@ -32,7 +32,7 @@ struct ImageClassPicker: View {
     
     var body: some View {
         Group {
-            if objc.isImageLoaded(path: namedNode.path) {
+            if listings.isImageLoaded(path: namedNode.path) {
                 let runtimeObjects = self.runtimeObjects
                 if runtimeObjects.isEmpty {
                     VStack {

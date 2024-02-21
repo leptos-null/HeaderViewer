@@ -13,7 +13,7 @@ struct NamedNodeView: View {
     
     @State private var searchText: String = ""
     
-    @EnvironmentObject private var objc: ObjcRuntime
+    @EnvironmentObject private var listings: RuntimeListings
     
     private var children: [NamedNode] {
         if searchText.isEmpty { return node.children }
@@ -45,6 +45,6 @@ struct NamedNodeView: View {
     }
     
     private func couldLoad(node: NamedNode) -> Bool {
-        node.isLeaf && !objc.isImageLoaded(path: node.path)
+        node.isLeaf && !listings.isImageLoaded(path: node.path)
     }
 }
