@@ -54,7 +54,7 @@ struct ContentView: View {
                 .toolbar {
                     ToolbarItem {
                         NavigationLink(value: CDUtilities.dyldSharedCacheImageRootNode) {
-                            Label("Browse", systemImage: "folder")
+                            Label("System Images", systemImage: "folder")
                         }
                     }
                 }
