@@ -42,7 +42,7 @@ struct ImageClassPicker: View {
                     }
                     .scenePadding()
                 } else {
-                    List(runtimeObjects, selection: $selection) { runtimeObject in
+                    ListView(runtimeObjects, selection: $selection) { runtimeObject in
                         RuntimeObjectRow(type: runtimeObject)
                     }
                     .id(runtimeObjects) // don't try to diff the List
