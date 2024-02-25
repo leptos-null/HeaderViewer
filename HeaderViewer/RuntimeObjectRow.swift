@@ -31,5 +31,6 @@ struct RuntimeObjectRow: View {
             Text(type.name)
             Spacer()
         }
+        .accessibilityLabel(type.name)
     }
 }

@@ -29,6 +29,7 @@ struct NamedNodeView: View {
                     Text(child.name)
                     Spacer()
                 }
+                .accessibilityLabel(child.name)
                 .contextMenu {
                     if couldLoad(node: child) {
                         Button {
