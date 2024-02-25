@@ -12,6 +12,7 @@ struct ImageClassPicker: View {
     let namedNode: NamedNode
     @Binding private var selection: RuntimeObjectType?
     @State private var searchString: String = ""
+    @State private var loadError: Error?
     
     @EnvironmentObject private var listings: RuntimeListings
     
@@ -32,15 +33,27 @@ struct ImageClassPicker: View {
     
     var body: some View {
         Group {
-            if listings.isImageLoaded(path: namedNode.path) {
+            if let loadError {
+                if let dlOpenError = loadError as? DlOpenError,
+                   let errorMessage = dlOpenError.message {
+                    StatusView {
+                        Text(errorMessage)
+                            .font(.callout.monospaced())
+                            .padding(.top)
+                    }
+                } else {
+                    StatusView {
+                        Text("An unknown error occured trying to load '\(namedNode.path)'")
+                            .padding(.top)
+                    }
+                }
+            } else if listings.isImageLoaded(path: namedNode.path) {
                 let runtimeObjects = self.runtimeObjects
                 if runtimeObjects.isEmpty {
-                    VStack {
+                    StatusView {
                         Text("\(namedNode.name) is loaded however does not appear to contain any classes")
                             .padding(.top)
-                        Spacer()
                     }
-                    .scenePadding()
                 } else {
                     ListView(runtimeObjects, selection: $selection) { runtimeObject in
                         RuntimeObjectRow(type: runtimeObject)
@@ -49,20 +62,41 @@ struct ImageClassPicker: View {
                     .searchable(text: $searchString)
                 }
             } else {
-                VStack {
+                StatusView {
                     Text("\(namedNode.name) is not yet loaded")
                         .padding(.top)
                     Button {
-                        CDUtilities.loadImage(at: namedNode.path)
+                        do {
+                            try CDUtilities.loadImage(at: namedNode.path)
+                        } catch {
+                            loadError = error
+                        }
                     } label: {
                         Text("Load now")
                     }
                     .buttonStyle(.bordered)
-                    Spacer()
                 }
-                .scenePadding()
             }
         }
         .navigationTitle(namedNode.name)
+    }
+}
+
+private struct StatusView<T: View>: View {
+    let contents: () -> T
+    
+    init(@ViewBuilder contents: @escaping () -> T) {
+        self.contents = contents
+    }
+    
+    var body: some View {
+        ScrollView(.vertical) {
+            VStack {
+                contents()
+                Spacer()
+            }
+        }
+        .frame(maxHeight: .infinity, alignment: .top)
+        .scenePadding()
     }
 }

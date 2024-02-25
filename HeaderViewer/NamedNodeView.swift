@@ -33,7 +33,7 @@ struct NamedNodeView: View {
                 .contextMenu {
                     if couldLoad(node: child) {
                         Button {
-                            CDUtilities.loadImage(at: child.path)
+                            try? CDUtilities.loadImage(at: child.path)
                         } label: {
                             Label("Load", systemImage: "ellipsis")
                         }

@@ -98,12 +98,21 @@ extension CDUtilities {
         return rootPath.appending(imagePath)
     }
     
-    @discardableResult
-    class func loadImage(at path: String) -> Bool {
-        path.withCString { cString in
-            dlopen(cString, RTLD_LAZY) != nil
+    class func loadImage(at path: String) throws {
+        try path.withCString { cString in
+            let handle = dlopen(cString, RTLD_LAZY)
+            // get the error and copy it into an object we control since the error is shared
+            let errPtr = dlerror()
+            let errStr = errPtr.map { String(cString: $0) }
+            guard handle != nil else {
+                throw DlOpenError(message: errStr)
+            }
         }
     }
+}
+
+struct DlOpenError: Error {
+    let message: String?
 }
 
 extension CDUtilities {
