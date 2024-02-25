@@ -49,7 +49,7 @@ final class RuntimeListings: ObservableObject {
     }
     
     func isImageLoaded(path: String) -> Bool {
-        imageList.contains(CDUtilities.patchImagePathForDYLD(path))
+        imageList.contains(CDUtilities.patchImagePathForDyld(path))
     }
 }
 
@@ -75,7 +75,7 @@ extension CDUtilities {
     }
     
     class func classNamesIn(image: String) -> [String] {
-        patchImagePathForDYLD(image).withCString(encodedAs: Unicode.UTF8.self) { cString in
+        patchImagePathForDyld(image).withCString { cString in
             var classCount: UInt32 = 0
             guard let classNames = objc_copyClassNamesForImage(cString, &classCount) else { return [] }
             
@@ -91,7 +91,8 @@ extension CDUtilities {
 }
 
 extension CDUtilities {
-    class func patchImagePathForDYLD(_ imagePath: String) -> String {
+    class func patchImagePathForDyld(_ imagePath: String) -> String {
+        guard imagePath.starts(with: "/") else { return imagePath }
         let rootPath = ProcessInfo.processInfo.environment["DYLD_ROOT_PATH"]
         guard let rootPath else { return imagePath }
         return rootPath.appending(imagePath)
