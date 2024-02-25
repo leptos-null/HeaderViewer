@@ -37,6 +37,7 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             NavigationStack {
+                let runtimeObjects = self.runtimeObjects
                 ListView(runtimeObjects, selection: $selectedObject) { runtimeObject in
                     RuntimeObjectRow(type: runtimeObject)
                 }
