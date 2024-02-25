@@ -31,6 +31,7 @@ struct SemanticStringView: View {
                             SemanticLineView(line: line)
                         }
                     }
+                    .accessibilityTextContentType(.sourceCode)
                 }
                 .font(.body.monospaced())
                 .textSelection(.enabled)
