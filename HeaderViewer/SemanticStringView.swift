@@ -24,6 +24,7 @@ struct SemanticStringView: View {
                     let (lines, longestLineIndex) = semanticString.semanticLines()
                     if let longestLineIndex {
                         SemanticLineView(line: lines[longestLineIndex])
+                            .padding(.horizontal, 4) // add some extra space, just in case
                             .opacity(0)
                     }
                     LazyVStack(alignment: .leading, spacing: 0) {
@@ -62,49 +63,102 @@ private struct SemanticRun: Identifiable {
     let type: CDSemanticType
 }
 
-private struct SemanticRunView: View {
-    let run: SemanticRun
-    
-    init(_ run: SemanticRun) {
-        self.run = run
-    }
-    
-    var body: some View {
-        Group {
-            switch run.type {
-            case .standard:
-                Text(run.string)
-            case .comment:
-                Text(run.string)
-                    .foregroundColor(.gray)
-            case .keyword:
-                Text(run.string)
-                    .foregroundColor(.pink)
-            case .variable:
-                Text(run.string)
-            case .recordName:
-                Text(run.string)
-                    .foregroundColor(.cyan)
-            case .class:
-                NavigationLink(value: RuntimeObjectType.class(named: run.string)) {
-                    Text(run.string)
-                        .foregroundColor(.mint)
-                }
-                .buttonStyle(.plain)
-            case .protocol:
-                NavigationLink(value: RuntimeObjectType.protocol(named: run.string)) {
-                    Text(run.string)
-                        .foregroundColor(.teal)
-                }
-                .buttonStyle(.plain)
-            case .numeric:
-                Text(run.string)
-                    .foregroundColor(.purple)
-            default:
-                Text(run.string)
+private struct SemanticOptimizedRun: Identifiable {
+    let id: Int
+    let type: SemanticOptimizedType
+}
+
+private enum SemanticOptimizedType {
+    case text(Text)
+    case navigation(RuntimeObjectType, Text)
+}
+
+private extension SemanticOptimizedRun {
+    static func optimize(lineContent: [SemanticRun]) -> [Self] {
+        var ret: [Self] = []
+        
+        var currentText: Text?
+        var currentLength: Int = 0
+        
+        func pushRun() {
+            if let prefix = currentText {
+                ret.append(.init(id: ret.count, type: .text(prefix)))
+                currentText = nil
+                currentLength = 0
             }
         }
-        .lineLimit(1, reservesSpace: true)
+        
+        for run in lineContent {
+            func pushText(_ provider: (Text) -> Text) {
+                let str = run.string
+                let text = provider(Text(str))
+                if let prefix = currentText {
+                    currentText = prefix + text
+                } else {
+                    currentText = text
+                }
+                currentLength += str.count
+                // optimization tuning parameter:
+                // too low -> laying out each line may take a long time
+                // too high -> Text may fail to layout
+                if currentLength > 512 {
+                    pushRun()
+                }
+            }
+            
+            func pushNavigation(_ objectType: RuntimeObjectType, _ provider: (Text) -> Text) {
+                pushRun()
+                let text = provider(Text(run.string))
+                ret.append(.init(id: ret.count, type: .navigation(objectType, text)))
+            }
+            
+            switch run.type {
+            case .standard:
+                pushText {
+                    $0
+                }
+            case .comment:
+                pushText {
+                    $0
+                        .foregroundColor(.gray)
+                }
+            case .keyword:
+                pushText {
+                    $0
+                        .foregroundColor(.pink)
+                }
+            case .variable:
+                pushText {
+                    $0
+                }
+            case .recordName:
+                pushText {
+                    $0
+                        .foregroundColor(.cyan)
+                }
+            case .class:
+                pushNavigation(.class(named: run.string)) {
+                    $0
+                        .foregroundColor(.mint)
+                }
+            case .protocol:
+                pushNavigation(.protocol(named: run.string)) {
+                    $0
+                        .foregroundColor(.teal)
+                }
+            case .numeric:
+                pushText {
+                    $0
+                }
+            default:
+                pushText {
+                    $0
+                }
+            }
+        }
+        pushRun()
+        
+        return ret
     }
 }
 
@@ -113,10 +167,19 @@ private struct SemanticLineView: View {
     
     var body: some View {
         HStack(alignment: .lastTextBaseline, spacing: 0) {
-            ForEach(line.content) { run in
-                SemanticRunView(run)
+            ForEach(SemanticOptimizedRun.optimize(lineContent: line.content)) { run in
+                switch run.type {
+                case .text(let text):
+                    text
+                case .navigation(let runtimeObjectType, let text):
+                    NavigationLink(value: runtimeObjectType) {
+                        text
+                    }
+                    .buttonStyle(.plain)
+                }
             }
         }
+        .lineLimit(1, reservesSpace: true)
         .padding(.vertical, 1) // effectively line spacing
     }
 }
