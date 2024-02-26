@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA53C69F2B8BF82000FC1A15 /* GatherScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA53C69E2B8BF82000FC1A15 /* GatherScreenshots.swift */; };
 		FA9687E92B8338E100123476 /* NamedNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687E82B8338E100123476 /* NamedNode.swift */; };
 		FA9687EB2B833C1700123476 /* RuntimeObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687EA2B833C1700123476 /* RuntimeObjectType.swift */; };
 		FA9687ED2B833C3200123476 /* RuntimeObjectDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687EC2B833C3200123476 /* RuntimeObjectDetail.swift */; };
@@ -24,6 +25,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		FA53C6992B8BF70200FC1A15 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAD661EC2B81D1210000D2A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAD661F32B81D1210000D2A6;
+			remoteInfo = HeaderViewer;
+		};
 		FAD6620B2B81D2990000D2A6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
@@ -62,6 +70,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FA53C6932B8BF70200FC1A15 /* HeaderViewerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HeaderViewerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA53C69E2B8BF82000FC1A15 /* GatherScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatherScreenshots.swift; sourceTree = "<group>"; };
+		FA53C6A02B8BFC0E00FC1A15 /* HeaderViewerUITests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeaderViewerUITests.entitlements; sourceTree = "<group>"; };
 		FA9687E72B82E37E00123476 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FA9687E82B8338E100123476 /* NamedNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedNode.swift; sourceTree = "<group>"; };
 		FA9687EA2B833C1700123476 /* RuntimeObjectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeObjectType.swift; sourceTree = "<group>"; };
@@ -81,6 +92,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		FA53C6902B8BF70200FC1A15 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FAD661F12B81D1210000D2A6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -92,11 +110,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FA53C6942B8BF70200FC1A15 /* HeaderViewerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FA53C69E2B8BF82000FC1A15 /* GatherScreenshots.swift */,
+				FA53C6A02B8BFC0E00FC1A15 /* HeaderViewerUITests.entitlements */,
+			);
+			path = HeaderViewerUITests;
+			sourceTree = "<group>";
+		};
 		FAD661EB2B81D1210000D2A6 = {
 			isa = PBXGroup;
 			children = (
 				FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */,
 				FAD661F62B81D1210000D2A6 /* HeaderViewer */,
+				FA53C6942B8BF70200FC1A15 /* HeaderViewerUITests */,
 				FAD661F52B81D1210000D2A6 /* Products */,
 				FAD6620F2B81D2C90000D2A6 /* Frameworks */,
 			);
@@ -106,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				FAD661F42B81D1210000D2A6 /* HeaderViewer.app */,
+				FA53C6932B8BF70200FC1A15 /* HeaderViewerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -150,6 +179,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		FA53C6922B8BF70200FC1A15 /* HeaderViewerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA53C69B2B8BF70200FC1A15 /* Build configuration list for PBXNativeTarget "HeaderViewerUITests" */;
+			buildPhases = (
+				FA53C68F2B8BF70200FC1A15 /* Sources */,
+				FA53C6902B8BF70200FC1A15 /* Frameworks */,
+				FA53C6912B8BF70200FC1A15 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FA53C69A2B8BF70200FC1A15 /* PBXTargetDependency */,
+			);
+			name = HeaderViewerUITests;
+			productName = HeaderViewerUITests;
+			productReference = FA53C6932B8BF70200FC1A15 /* HeaderViewerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		FAD661F32B81D1210000D2A6 /* HeaderViewer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FAD662032B81D1220000D2A6 /* Build configuration list for PBXNativeTarget "HeaderViewer" */;
@@ -176,9 +223,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
+					FA53C6922B8BF70200FC1A15 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = FAD661F32B81D1210000D2A6;
+					};
 					FAD661F32B81D1210000D2A6 = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
@@ -204,6 +255,7 @@
 			projectRoot = "";
 			targets = (
 				FAD661F32B81D1210000D2A6 /* HeaderViewer */,
+				FA53C6922B8BF70200FC1A15 /* HeaderViewerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -226,6 +278,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		FA53C6912B8BF70200FC1A15 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FAD661F22B81D1210000D2A6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -237,6 +296,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		FA53C68F2B8BF70200FC1A15 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA53C69F2B8BF82000FC1A15 /* GatherScreenshots.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FAD661F02B81D1210000D2A6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -258,6 +325,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		FA53C69A2B8BF70200FC1A15 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAD661F32B81D1210000D2A6 /* HeaderViewer */;
+			targetProxy = FA53C6992B8BF70200FC1A15 /* PBXContainerItemProxy */;
+		};
 		FAE3C1702B81F7AC00242A99 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ClassDump;
@@ -266,6 +338,52 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		FA53C69C2B8BF70200FC1A15 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = HeaderViewerUITests/HeaderViewerUITests.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7P56K8K4MY;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.HeaderViewerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = HeaderViewer;
+			};
+			name = Debug;
+		};
+		FA53C69D2B8BF70200FC1A15 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = HeaderViewerUITests/HeaderViewerUITests.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7P56K8K4MY;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.HeaderViewerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = HeaderViewer;
+			};
+			name = Release;
+		};
 		FAD662012B81D1220000D2A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -465,6 +583,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		FA53C69B2B8BF70200FC1A15 /* Build configuration list for PBXNativeTarget "HeaderViewerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA53C69C2B8BF70200FC1A15 /* Debug */,
+				FA53C69D2B8BF70200FC1A15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		FAD661EF2B81D1210000D2A6 /* Build configuration list for PBXProject "HeaderViewer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
