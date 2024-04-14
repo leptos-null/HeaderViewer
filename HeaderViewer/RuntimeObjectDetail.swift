@@ -9,6 +9,19 @@ import SwiftUI
 import ClassDump
 
 struct RuntimeObjectDetail: View {
+    // influenced by
+    // https://developer.apple.com/design/human-interface-guidelines/typography
+    private static var defaultFontSize: Int {
+#if os(iOS) || os(visionOS)
+        16
+#elseif os(macOS)
+        13
+#else
+#warning("Unknown platform")
+        12
+#endif
+    }
+    
     let type: RuntimeObjectType
     
     @State private var stripProtocolConformance: Bool = false
@@ -16,6 +29,8 @@ struct RuntimeObjectDetail: View {
     @State private var stripDuplicates: Bool = true
     @State private var stripSynthesized: Bool = true
     @State private var addSymbolImageComments: Bool = false
+    
+    @AppStorage("code_font_size") private var fontSize: Int = Self.defaultFontSize
     
     private var generationOptions: CDGenerationOptions {
         let options: CDGenerationOptions = .init()
@@ -36,7 +51,7 @@ struct RuntimeObjectDetail: View {
                 if let cls = NSClassFromString(name) {
                     let semanticString: CDSemanticString = CDClassModel(with: cls)
                         .semanticLines(with: generationOptions)
-                    SemanticStringView(semanticString)
+                    SemanticStringView(semanticString, fontSize: CGFloat(fontSize))
                 } else {
                     Text("No class named \(Text(name).font(.callout.monospaced())) found")
                         .scenePadding()
@@ -45,7 +60,7 @@ struct RuntimeObjectDetail: View {
                 if let prtcl = NSProtocolFromString(name) {
                     let semanticString: CDSemanticString = CDProtocolModel(with: prtcl)
                         .semanticLines(with: generationOptions)
-                    SemanticStringView(semanticString)
+                    SemanticStringView(semanticString, fontSize: CGFloat(fontSize))
                 } else {
                     Text("No protocol named \(Text(name).font(.callout.monospaced())) found")
                         .scenePadding()
@@ -54,6 +69,8 @@ struct RuntimeObjectDetail: View {
         }
         .navigationTitle(type.name)
         .toolbar {
+            FontToolbarItem(fontSize: $fontSize)
+            
             ToolbarItem {
                 Menu {
                     Toggle("Strip protocol conformance", isOn: $stripProtocolConformance)
@@ -72,5 +89,62 @@ struct RuntimeObjectDetail: View {
 #if os(visionOS)
         .background(.ultraThickMaterial)
 #endif
+    }
+}
+
+private struct FontToolbarItem: ToolbarContent {
+    @Binding var fontSize: Int
+    
+    private var sizeDescription: String {
+        fontSize.formatted(.number)
+    }
+    
+    private var smallerButton: some View {
+        Button("Smaller", systemImage: "textformat.size.smaller") {
+            guard fontSize > 4 else { return }
+            fontSize -= 1
+        }
+    }
+    
+    private var largerButton: some View {
+        Button("Larger", systemImage: "textformat.size.larger") {
+            guard fontSize < 28 else { return }
+            fontSize += 1
+        }
+    }
+    
+    private func sizeControlGroup(withDescription: Bool) -> some View {
+        ControlGroup("Font Size", systemImage: "textformat.size") {
+            smallerButton
+            if withDescription {
+                Text(sizeDescription)
+            }
+            largerButton
+        }
+    }
+    
+    var body: some ToolbarContent {
+        ToolbarItem {
+#if os(iOS) || os(visionOS)
+            if #available(iOS 16.4, *) {
+                Menu {
+                    sizeControlGroup(withDescription: true)
+                        .controlGroupStyle(.compactMenu)
+                } label: {
+                    Label("Font", systemImage: "textformat.size")
+                }
+                .menuActionDismissBehavior(.disabled)
+            } else {
+                Menu {
+                    sizeControlGroup(withDescription: true)
+                } label: {
+                    Label("Font", systemImage: "textformat.size")
+                }
+            }
+#else
+            sizeControlGroup(withDescription: false)
+                .controlGroupStyle(.navigation)
+#endif
+        }
     }
 }

@@ -10,9 +10,11 @@ import ClassDump
 
 struct SemanticStringView: View {
     let semanticString: CDSemanticString
+    let fontSize: CGFloat
     
-    init(_ semanticString: CDSemanticString) {
+    init(_ semanticString: CDSemanticString, fontSize: CGFloat) {
         self.semanticString = semanticString
+        self.fontSize = fontSize
     }
     
     var body: some View {
@@ -34,7 +36,7 @@ struct SemanticStringView: View {
                     }
                     .accessibilityTextContentType(.sourceCode)
                 }
-                .font(.body.monospaced())
+                .font(.system(size: fontSize, design: .monospaced))
                 .textSelection(.enabled)
                 .multilineTextAlignment(.leading)
                 .scenePadding()
