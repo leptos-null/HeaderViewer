@@ -1,4 +1,4 @@
-## iPad mini (6th generation) 17.2
+## iPad mini (6th generation) 17.4
 
 ![Class list](0_landing.png)
 
