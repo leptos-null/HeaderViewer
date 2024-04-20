@@ -1,0 +1,44 @@
+# Based on
+# https://github.com/theos/sdks/blob/ca52092/.github/workflows/release.yml
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    # needed to be able to create a Release
+    permissions:
+      contents: write
+    runs-on: macos-14
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Archive iOS app
+        run: |
+          xcodebuild \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO \
+            archive -scheme HeaderViewer \
+            -destination 'generic/platform=iOS' \
+            -archivePath ios_archive \
+            -quiet
+
+      - name: Package iOS app
+        run: |
+          mv ios_archive.xcarchive/Products/Applications Payload
+          zip -yqr HeaderViewer.ipa Payload
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="auto-${GITHUB_SHA:0:7}"
+          gh release create "${TAG}" --draft \
+            --title "Automatic Release" \
+            --target "${GITHUB_SHA}" \
+            HeaderViewer.ipa
