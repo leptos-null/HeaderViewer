@@ -127,6 +127,7 @@ struct ImageClassPicker: View {
                     }
                     .id(runtimeObjects) // don't try to diff the List
                     .searchable(text: $viewModel.searchString)
+                    .autocorrectionDisabled() // turn of auto-correct for the search field
                 }
             case .loadError(let error):
                 StatusView {

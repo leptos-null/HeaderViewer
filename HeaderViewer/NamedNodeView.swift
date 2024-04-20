@@ -42,6 +42,7 @@ struct NamedNodeView: View {
             }
         }
         .searchable(text: $searchText)
+        .autocorrectionDisabled() // turn of auto-correct for the search field
         .navigationTitle((node.name.isEmpty && node.parent == nil) ? "/" : node.name)
     }
     

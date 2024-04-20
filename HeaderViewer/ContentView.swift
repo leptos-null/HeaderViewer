@@ -143,6 +143,7 @@ private struct AllRuntimeObjectsView: View {
         }
         .id(runtimeObjects) // don't try to diff the List
         .searchable(text: $viewModel.searchString)
+        .autocorrectionDisabled() // turn of auto-correct for the search field
         .searchScopes($viewModel.searchScope) {
             Text("All")
                 .tag(RuntimeTypeSearchScope.all)
