@@ -31,6 +31,34 @@ struct ContentView: View {
     }
 }
 
+struct ContentRootView: View {
+    private static let dscRootNode = CDUtilities.dyldSharedCacheImageRootNode
+    
+    @Binding var selectedObject: RuntimeObjectType?
+    
+    var body: some View {
+        NavigationStack {
+            AllRuntimeObjectsView(selectedObject: $selectedObject)
+                .navigationTitle("Header Viewer")
+                .toolbar {
+                    ToolbarItem {
+                        NavigationLink(value: Self.dscRootNode) {
+                            Label("System Images", systemImage: "folder")
+                        }
+                    }
+                }
+                .navigationDestination(for: NamedNode.self) { namedNode in
+                    if namedNode.isLeaf {
+                        ImageClassPicker(namedNode: namedNode, selection: $selectedObject)
+                    } else {
+                        NamedNodeView(node: namedNode)
+                            .environmentObject(RuntimeListings.shared)
+                    }
+                }
+        }
+    }
+}
+
 private enum RuntimeTypeSearchScope: Hashable {
     case all
     case classes
@@ -54,7 +82,7 @@ private extension RuntimeTypeSearchScope {
     }
 }
 
-private class ContentRootViewModel: ObservableObject {
+private class AllRuntimeObjectsViewModel: ObservableObject {
     let runtimeListings: RuntimeListings = .shared
     
     @Published var searchString: String
@@ -99,47 +127,29 @@ private class ContentRootViewModel: ObservableObject {
     }
 }
 
-struct ContentRootView: View {
-    @StateObject private var viewModel: ContentRootViewModel
+private struct AllRuntimeObjectsView: View {
+    @StateObject private var viewModel: AllRuntimeObjectsViewModel
     @Binding var selectedObject: RuntimeObjectType?
     
     init(selectedObject: Binding<RuntimeObjectType?>) {
-        _viewModel = StateObject(wrappedValue: ContentRootViewModel())
+        _viewModel = StateObject(wrappedValue: AllRuntimeObjectsViewModel())
         _selectedObject = selectedObject
     }
     
     var body: some View {
-        NavigationStack {
-            let runtimeObjects = viewModel.runtimeObjects
-            ListView(runtimeObjects, selection: $selectedObject) { runtimeObject in
-                RuntimeObjectRow(type: runtimeObject)
-            }
-            .id(runtimeObjects) // don't try to diff the List
-            .searchable(text: $viewModel.searchString)
-            .searchScopes($viewModel.searchScope) {
-                Text("All")
-                    .tag(RuntimeTypeSearchScope.all)
-                Text("Classes")
-                    .tag(RuntimeTypeSearchScope.classes)
-                Text("Protocols")
-                    .tag(RuntimeTypeSearchScope.protocols)
-            }
-            .navigationTitle("Header Viewer")
-            .toolbar {
-                ToolbarItem {
-                    NavigationLink(value: CDUtilities.dyldSharedCacheImageRootNode) {
-                        Label("System Images", systemImage: "folder")
-                    }
-                }
-            }
-            .navigationDestination(for: NamedNode.self) { namedNode in
-                if namedNode.isLeaf {
-                    ImageClassPicker(namedNode: namedNode, selection: $selectedObject)
-                } else {
-                    NamedNodeView(node: namedNode)
-                        .environmentObject(RuntimeListings.shared)
-                }
-            }
+        let runtimeObjects = viewModel.runtimeObjects
+        ListView(runtimeObjects, selection: $selectedObject) { runtimeObject in
+            RuntimeObjectRow(type: runtimeObject)
+        }
+        .id(runtimeObjects) // don't try to diff the List
+        .searchable(text: $viewModel.searchString)
+        .searchScopes($viewModel.searchScope) {
+            Text("All")
+                .tag(RuntimeTypeSearchScope.all)
+            Text("Classes")
+                .tag(RuntimeTypeSearchScope.classes)
+            Text("Protocols")
+                .tag(RuntimeTypeSearchScope.protocols)
         }
     }
 }
