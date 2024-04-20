@@ -9,14 +9,11 @@ import SwiftUI
 import ClassDump
 
 struct ContentView: View {
-    @StateObject private var listings: RuntimeListings = .shared
-    
     @State private var selectedObject: RuntimeObjectType?
     
     var body: some View {
         NavigationSplitView {
             ContentRootView(selectedObject: $selectedObject)
-                .environmentObject(listings)
         } detail: {
             if let selectedObject {
                 NavigationStack {
@@ -40,34 +37,86 @@ private enum RuntimeTypeSearchScope: Hashable {
     case protocols
 }
 
-struct ContentRootView: View {
-    @EnvironmentObject private var listings: RuntimeListings
-    
-    @Binding var selectedObject: RuntimeObjectType?
-    @State private var searchString: String = ""
-    @State private var searchScope: RuntimeTypeSearchScope = .all
-    
-    private var runtimeObjects: [RuntimeObjectType] {
-        var ret: [RuntimeObjectType] = []
-        if searchScope != .protocols {
-            ret += listings.classList.map { .class(named: $0) }
+private extension RuntimeTypeSearchScope {
+    var includesClasses: Bool {
+        switch self {
+        case .all: true
+        case .classes: true
+        case .protocols: false
         }
-        if searchScope != .classes {
-            ret += listings.protocolList.map { .protocol(named: $0) }
+    }
+    var includesProtocols: Bool {
+        switch self {
+        case .all: true
+        case .classes: false
+        case .protocols: true
+        }
+    }
+}
+
+private class ContentRootViewModel: ObservableObject {
+    let runtimeListings: RuntimeListings = .shared
+    
+    @Published var searchString: String
+    @Published var searchScope: RuntimeTypeSearchScope
+    
+    @Published private(set) var runtimeObjects: [RuntimeObjectType] // filtered based on search
+    
+    private static func runtimeObjectsFor(classNames: [String], protocolNames: [String], searchString: String, searchScope: RuntimeTypeSearchScope) -> [RuntimeObjectType] {
+        var ret: [RuntimeObjectType] = []
+        if searchScope.includesClasses {
+            ret += classNames.map { .class(named: $0) }
+        }
+        if searchScope.includesProtocols {
+            ret += protocolNames.map { .protocol(named: $0) }
         }
         if searchString.isEmpty { return ret }
         return ret.filter { $0.name.localizedCaseInsensitiveContains(searchString) }
     }
     
+    init() {
+        let searchString = ""
+        let searchScope: RuntimeTypeSearchScope = .all
+        
+        self.searchString = searchString
+        self.searchScope = searchScope
+        self.runtimeObjects = Self.runtimeObjectsFor(
+            classNames: runtimeListings.classList, protocolNames: runtimeListings.protocolList,
+            searchString: searchString, searchScope: searchScope
+        )
+        
+        let debouncedSearch = $searchString
+            .debounce(for: 0.08, scheduler: RunLoop.main)
+        
+        $searchScope
+            .combineLatest(debouncedSearch, runtimeListings.$classList, runtimeListings.$protocolList) {
+                Self.runtimeObjectsFor(
+                    classNames: $2, protocolNames: $3,
+                    searchString: $1, searchScope: $0
+                )
+            }
+            .assign(to: &$runtimeObjects)
+    }
+}
+
+struct ContentRootView: View {
+    @StateObject private var viewModel: ContentRootViewModel
+    @Binding var selectedObject: RuntimeObjectType?
+    
+    init(selectedObject: Binding<RuntimeObjectType?>) {
+        _viewModel = StateObject(wrappedValue: ContentRootViewModel())
+        _selectedObject = selectedObject
+    }
+    
     var body: some View {
         NavigationStack {
-            let runtimeObjects = self.runtimeObjects
+            let runtimeObjects = viewModel.runtimeObjects
             ListView(runtimeObjects, selection: $selectedObject) { runtimeObject in
                 RuntimeObjectRow(type: runtimeObject)
             }
             .id(runtimeObjects) // don't try to diff the List
-            .searchable(text: $searchString)
-            .searchScopes($searchScope) {
+            .searchable(text: $viewModel.searchString)
+            .searchScopes($viewModel.searchScope) {
                 Text("All")
                     .tag(RuntimeTypeSearchScope.all)
                 Text("Classes")
@@ -88,7 +137,7 @@ struct ContentRootView: View {
                     ImageClassPicker(namedNode: namedNode, selection: $selectedObject)
                 } else {
                     NamedNodeView(node: namedNode)
-                        .environmentObject(listings)
+                        .environmentObject(RuntimeListings.shared)
                 }
             }
         }
