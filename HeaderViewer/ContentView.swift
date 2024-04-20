@@ -86,7 +86,6 @@ struct ContentRootView: View {
             .navigationDestination(for: NamedNode.self) { namedNode in
                 if namedNode.isLeaf {
                     ImageClassPicker(namedNode: namedNode, selection: $selectedObject)
-                        .environmentObject(listings)
                 } else {
                     NamedNodeView(node: namedNode)
                         .environmentObject(listings)
