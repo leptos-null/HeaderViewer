@@ -49,7 +49,7 @@ struct ContentRootView: View {
                 }
                 .navigationDestination(for: NamedNode.self) { namedNode in
                     if namedNode.isLeaf {
-                        ImageClassPicker(namedNode: namedNode, selection: $selectedObject)
+                        ImageRuntimeObjectsView(namedNode: namedNode, selection: $selectedObject)
                     } else {
                         NamedNodeView(node: namedNode)
                             .environmentObject(RuntimeListings.shared)

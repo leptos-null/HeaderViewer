@@ -15,7 +15,7 @@
 		FA9687EF2B833D5F00123476 /* RuntimeObjectRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687EE2B833D5F00123476 /* RuntimeObjectRow.swift */; };
 		FA9687F12B8366B500123476 /* NamedNodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687F02B8366B400123476 /* NamedNodeView.swift */; };
 		FA9687F32B8433B900123476 /* SemanticStringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687F22B8433B900123476 /* SemanticStringView.swift */; };
-		FAAA8C0F2B85788700BD85B4 /* ImageClassPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA8C0E2B85788700BD85B4 /* ImageClassPicker.swift */; };
+		FAAA8C0F2B85788700BD85B4 /* ImageRuntimeObjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA8C0E2B85788700BD85B4 /* ImageRuntimeObjectsView.swift */; };
 		FAAA8C132B857A1300BD85B4 /* RuntimeListings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA8C122B857A1300BD85B4 /* RuntimeListings.swift */; };
 		FAAA8C172B8B072100BD85B4 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA8C162B8B072100BD85B4 /* ListView.swift */; };
 		FAD661F82B81D1210000D2A6 /* HeaderViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */; };
@@ -82,7 +82,7 @@
 		FA9687EE2B833D5F00123476 /* RuntimeObjectRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeObjectRow.swift; sourceTree = "<group>"; };
 		FA9687F02B8366B400123476 /* NamedNodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedNodeView.swift; sourceTree = "<group>"; };
 		FA9687F22B8433B900123476 /* SemanticStringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemanticStringView.swift; sourceTree = "<group>"; };
-		FAAA8C0E2B85788700BD85B4 /* ImageClassPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageClassPicker.swift; sourceTree = "<group>"; };
+		FAAA8C0E2B85788700BD85B4 /* ImageRuntimeObjectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRuntimeObjectsView.swift; sourceTree = "<group>"; };
 		FAAA8C122B857A1300BD85B4 /* RuntimeListings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeListings.swift; sourceTree = "<group>"; };
 		FAAA8C162B8B072100BD85B4 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		FAD661F42B81D1210000D2A6 /* HeaderViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeaderViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,7 +149,7 @@
 				FA6BEDCA2BD5941500D20C6F /* RuntimeObjectsView.swift */,
 				FAAA8C162B8B072100BD85B4 /* ListView.swift */,
 				FAAA8C122B857A1300BD85B4 /* RuntimeListings.swift */,
-				FAAA8C0E2B85788700BD85B4 /* ImageClassPicker.swift */,
+				FAAA8C0E2B85788700BD85B4 /* ImageRuntimeObjectsView.swift */,
 				FA9687F02B8366B400123476 /* NamedNodeView.swift */,
 				FA9687E82B8338E100123476 /* NamedNode.swift */,
 				FA9687EA2B833C1700123476 /* RuntimeObjectType.swift */,
@@ -312,7 +312,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA6BEDCB2BD5941500D20C6F /* RuntimeObjectsView.swift in Sources */,
-				FAAA8C0F2B85788700BD85B4 /* ImageClassPicker.swift in Sources */,
+				FAAA8C0F2B85788700BD85B4 /* ImageRuntimeObjectsView.swift in Sources */,
 				FA9687E92B8338E100123476 /* NamedNode.swift in Sources */,
 				FA9687F32B8433B900123476 /* SemanticStringView.swift in Sources */,
 				FAAA8C132B857A1300BD85B4 /* RuntimeListings.swift in Sources */,

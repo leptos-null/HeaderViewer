@@ -1,5 +1,5 @@
 //
-//  ImageClassPicker.swift
+//  ImageRuntimeObjectsView.swift
 //  HeaderViewer
 //
 //  Created by Leptos on 2/20/24.
@@ -15,7 +15,7 @@ private enum ImageLoadState {
     case loadError(Error)
 }
 
-private class ImageClassPickerModel: ObservableObject {
+private class ImageRuntimeObjectsViewModel: ObservableObject {
     let namedNode: NamedNode
     
     let imagePath: String
@@ -24,13 +24,21 @@ private class ImageClassPickerModel: ObservableObject {
     let runtimeListings: RuntimeListings = .shared
     
     @Published var searchString: String
+    @Published var searchScope: RuntimeTypeSearchScope
     
     @Published private(set) var classNames: [String] // not filtered
+    @Published private(set) var protocolNames: [String] // not filtered
     @Published private(set) var runtimeObjects: [RuntimeObjectType] // filtered based on search
     @Published private(set) var loadState: ImageLoadState
     
-    private static func runtimeObjectsFor(classNames: [String], searchString: String) -> [RuntimeObjectType] {
-        let ret: [RuntimeObjectType] = classNames.map { .class(named: $0) }
+    private static func runtimeObjectsFor(classNames: [String], protocolNames: [String], searchString: String, searchScope: RuntimeTypeSearchScope) -> [RuntimeObjectType] {
+        var ret: [RuntimeObjectType] = []
+        if searchScope.includesClasses {
+            ret += classNames.map { .class(named: $0) }
+        }
+        if searchScope.includesProtocols {
+            ret += protocolNames.map { .protocol(named: $0) }
+        }
         if searchString.isEmpty { return ret }
         return ret.filter { $0.name.localizedCaseInsensitiveContains(searchString) }
     }
@@ -43,12 +51,20 @@ private class ImageClassPickerModel: ObservableObject {
         self.imageName = namedNode.name
         
         let classNames = CDUtilities.classNamesIn(image: imagePath)
+        let protocolNames = runtimeListings.imageToProtocols[CDUtilities.patchImagePathForDyld(imagePath)] ?? []
         self.classNames = classNames
+        self.protocolNames = protocolNames
         
         let searchString = ""
-        self.searchString = searchString
+        let searchScope: RuntimeTypeSearchScope = .all
         
-        self.runtimeObjects = Self.runtimeObjectsFor(classNames: classNames, searchString: searchString)
+        self.searchString = searchString
+        self.searchScope = searchScope
+        
+        self.runtimeObjects = Self.runtimeObjectsFor(
+            classNames: classNames, protocolNames: protocolNames,
+            searchString: searchString, searchScope: searchScope
+        )
         
         self.loadState = runtimeListings.isImageLoaded(path: imagePath) ? .loaded : .notLoaded
         
@@ -58,13 +74,23 @@ private class ImageClassPickerModel: ObservableObject {
             }
             .assign(to: &$classNames)
         
+        runtimeListings.$imageToProtocols
+            .map { imageToProtocols in
+                imageToProtocols[CDUtilities.patchImagePathForDyld(imagePath)] ?? []
+            }
+            .assign(to: &$protocolNames)
+        
         let debouncedSearch = $searchString
             .debounce(for: 0.08, scheduler: RunLoop.main)
         
-        $classNames.combineLatest(debouncedSearch) { classNames, searchString in
-            Self.runtimeObjectsFor(classNames: classNames, searchString: searchString)
-        }
-        .assign(to: &$runtimeObjects)
+        $searchScope
+            .combineLatest(debouncedSearch, $classNames, $protocolNames) {
+                Self.runtimeObjectsFor(
+                    classNames: $2, protocolNames: $3,
+                    searchString: $1, searchScope: $0
+                )
+            }
+            .assign(to: &$runtimeObjects)
         
         runtimeListings.$imageList
             .map { imageList in
@@ -88,12 +114,12 @@ private class ImageClassPickerModel: ObservableObject {
     }
 }
 
-struct ImageClassPicker: View {
-    @StateObject private var viewModel: ImageClassPickerModel
+struct ImageRuntimeObjectsView: View {
+    @StateObject private var viewModel: ImageRuntimeObjectsViewModel
     @Binding private var selection: RuntimeObjectType?
     
     init(namedNode: NamedNode, selection: Binding<RuntimeObjectType?>) {
-        _viewModel = StateObject(wrappedValue: ImageClassPickerModel(namedNode: namedNode))
+        _viewModel = StateObject(wrappedValue: ImageRuntimeObjectsViewModel(namedNode: namedNode))
         _selection = selection
     }
     
@@ -115,19 +141,16 @@ struct ImageClassPicker: View {
                 ProgressView()
                     .scenePadding()
             case .loaded:
-                if viewModel.classNames.isEmpty {
+                if viewModel.classNames.isEmpty && viewModel.protocolNames.isEmpty {
                     StatusView {
-                        Text("\(viewModel.imageName) is loaded however does not appear to contain any classes")
+                        Text("\(viewModel.imageName) is loaded however does not appear to contain any classes or protocols")
                             .padding(.top)
                     }
                 } else {
-                    let runtimeObjects = viewModel.runtimeObjects
-                    ListView(runtimeObjects, selection: $selection) { runtimeObject in
-                        RuntimeObjectRow(type: runtimeObject)
-                    }
-                    .id(runtimeObjects) // don't try to diff the List
-                    .searchable(text: $viewModel.searchString)
-                    .autocorrectionDisabled() // turn of auto-correct for the search field
+                    RuntimeObjectsList(
+                        runtimeObjects: viewModel.runtimeObjects, selectedObject: $selection,
+                        searchString: $viewModel.searchString, searchScope: $viewModel.searchScope
+                    )
                 }
             case .loadError(let error):
                 StatusView {
