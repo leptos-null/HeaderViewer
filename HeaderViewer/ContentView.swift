@@ -59,29 +59,6 @@ struct ContentRootView: View {
     }
 }
 
-private enum RuntimeTypeSearchScope: Hashable {
-    case all
-    case classes
-    case protocols
-}
-
-private extension RuntimeTypeSearchScope {
-    var includesClasses: Bool {
-        switch self {
-        case .all: true
-        case .classes: true
-        case .protocols: false
-        }
-    }
-    var includesProtocols: Bool {
-        switch self {
-        case .all: true
-        case .classes: false
-        case .protocols: true
-        }
-    }
-}
-
 private class AllRuntimeObjectsViewModel: ObservableObject {
     let runtimeListings: RuntimeListings = .shared
     
@@ -137,20 +114,9 @@ private struct AllRuntimeObjectsView: View {
     }
     
     var body: some View {
-        let runtimeObjects = viewModel.runtimeObjects
-        ListView(runtimeObjects, selection: $selectedObject) { runtimeObject in
-            RuntimeObjectRow(type: runtimeObject)
-        }
-        .id(runtimeObjects) // don't try to diff the List
-        .searchable(text: $viewModel.searchString)
-        .autocorrectionDisabled() // turn of auto-correct for the search field
-        .searchScopes($viewModel.searchScope) {
-            Text("All")
-                .tag(RuntimeTypeSearchScope.all)
-            Text("Classes")
-                .tag(RuntimeTypeSearchScope.classes)
-            Text("Protocols")
-                .tag(RuntimeTypeSearchScope.protocols)
-        }
+        RuntimeObjectsList(
+            runtimeObjects: viewModel.runtimeObjects, selectedObject: $selectedObject,
+            searchString: $viewModel.searchString, searchScope: $viewModel.searchScope
+        )
     }
 }
