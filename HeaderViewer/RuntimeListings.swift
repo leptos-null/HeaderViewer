@@ -73,6 +73,27 @@ final class RuntimeListings: ObservableObject {
             }
             .store(in: &subscriptions)
         
+        Timer.publish(every: 15, on: .main, in: .default)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self else { return }
+                
+                let classList = CDUtilities.classNames()
+                let protocolList = CDUtilities.protocolNames()
+                
+                let refClassList = self.classList
+                let refProtocolList = self.protocolList
+                
+                if classList != refClassList {
+                    Self.logger.error("Watchdog: classList is out-of-date")
+                    self.classList = classList
+                }
+                if protocolList != refProtocolList {
+                    Self.logger.error("Watchdog: protocolList is out-of-date")
+                    self.protocolList = protocolList
+                }
+            }
+            .store(in: &subscriptions)
     }
     
     func isImageLoaded(path: String) -> Bool {
