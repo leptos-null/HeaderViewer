@@ -138,8 +138,10 @@ struct ImageRuntimeObjectsView: View {
                     .buttonStyle(.bordered)
                 }
             case .loading:
-                ProgressView()
-                    .scenePadding()
+                StatusView {
+                    ProgressView()
+                        .scenePadding()
+                }
             case .loaded:
                 if viewModel.classNames.isEmpty && viewModel.protocolNames.isEmpty {
                     StatusView {
@@ -183,8 +185,8 @@ private struct StatusView<T: View>: View {
                 contents()
                 Spacer()
             }
+            .scenePadding()
         }
         .frame(maxHeight: .infinity, alignment: .top)
-        .scenePadding()
     }
 }
