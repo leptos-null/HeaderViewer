@@ -9,23 +9,36 @@ import Foundation
 import Combine
 import ClassDump
 import MachO.dyld
+import OSLog
 
 final class RuntimeListings: ObservableObject {
     static let shared = RuntimeListings()
     private static var sharedIfExists: RuntimeListings?
+    private static let logger = Logger(subsystem: "null.leptos.HeaderViewer", category: "RuntimeListings")
     
     @Published private(set) var classList: [String]
     @Published private(set) var protocolList: [String]
     @Published private(set) var imageList: [String]
+    
+    @Published private(set) var protocolToImage: [String: String]
+    @Published private(set) var imageToProtocols: [String: [String]]
     
     private let shouldReload = PassthroughSubject<Void, Never>()
     
     private var subscriptions: Set<AnyCancellable> = []
     
     private init() {
-        self.classList = CDUtilities.classNames()
-        self.protocolList = CDUtilities.protocolNames()
+        let classList = CDUtilities.classNames()
+        let protocolList = CDUtilities.protocolNames()
+        self.classList = classList
+        self.protocolList = protocolList
         self.imageList = CDUtilities.imageNames()
+        
+        let (protocolToImage, imageToProtocols) = Self.protocolImageTrackingFor(
+            protocolList: protocolList, protocolToImage: [:], imageToProtocols: [:]
+        ) ?? ([:], [:])
+        self.protocolToImage = protocolToImage
+        self.imageToProtocols = imageToProtocols
         
         RuntimeListings.sharedIfExists = self
         
@@ -33,9 +46,11 @@ final class RuntimeListings: ObservableObject {
             .debounce(for: .milliseconds(15), scheduler: DispatchQueue.main)
             .sink { [weak self] in
                 guard let self else { return }
+                Self.logger.debug("Start reload")
                 self.classList = CDUtilities.classNames()
                 self.protocolList = CDUtilities.protocolNames()
                 self.imageList = CDUtilities.imageNames()
+                Self.logger.debug("End reload")
             }
             .store(in: &subscriptions)
         
@@ -46,10 +61,61 @@ final class RuntimeListings: ObservableObject {
         _dyld_register_func_for_remove_image { _, _ in
             RuntimeListings.sharedIfExists?.shouldReload.send()
         }
+        
+        $protocolList
+            .combineLatest($protocolToImage, $imageToProtocols)
+            .sink { [unowned self] in
+                guard let (protocolToImage, imageToProtocols) = Self.protocolImageTrackingFor(
+                    protocolList: $0, protocolToImage: $1, imageToProtocols: $2
+                ) else { return }
+                self.protocolToImage = protocolToImage
+                self.imageToProtocols = imageToProtocols
+            }
+            .store(in: &subscriptions)
+        
     }
     
     func isImageLoaded(path: String) -> Bool {
         imageList.contains(CDUtilities.patchImagePathForDyld(path))
+    }
+}
+
+private extension RuntimeListings {
+    static func protocolImageTrackingFor(
+        protocolList: [String], protocolToImage: [String: String], imageToProtocols: [String: [String]]
+    ) -> ([String: String], [String: [String]])? {
+        var protocolToImageCopy = protocolToImage
+        var imageToProtocolsCopy = imageToProtocols
+        
+        var dlInfo = dl_info()
+        var didChange: Bool = false
+        
+        for protocolName in protocolList {
+            guard protocolToImageCopy[protocolName] == nil else { continue } // happy path
+            
+            guard let prtcl = NSProtocolFromString(protocolName) else {
+                logger.error("Failed to find protocol named '\(protocolName, privacy: .public)'")
+                continue
+            }
+            
+            guard dladdr(protocol_getName(prtcl), &dlInfo) != 0 else {
+                logger.warning("Failed to get dl_info for protocol named '\(protocolName, privacy: .public)'")
+                continue
+            }
+            
+            guard let abc = dlInfo.dli_fname else {
+                logger.error("Failed to get dli_fname for protocol named '\(protocolName, privacy: .public)'")
+                continue
+            }
+            
+            let imageName = String(cString: abc)
+            protocolToImageCopy[protocolName] = imageName
+            imageToProtocolsCopy[imageName, default: []].append(protocolName)
+            
+            didChange = true
+        }
+        guard didChange else { return nil }
+        return (protocolToImageCopy, imageToProtocolsCopy)
     }
 }
 
