@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ClassDump
+import ClassDumpRuntime
 
 struct SemanticStringView: View {
     let semanticString: CDSemanticString

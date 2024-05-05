@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E968E33A2BE68CD100B0A1B9 /* ClassDumpRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = E968E3392BE68CD100B0A1B9 /* ClassDumpRuntime */; };
 		FA53C69F2B8BF82000FC1A15 /* GatherScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA53C69E2B8BF82000FC1A15 /* GatherScreenshots.swift */; };
 		FA6BEDCB2BD5941500D20C6F /* RuntimeObjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BEDCA2BD5941500D20C6F /* RuntimeObjectsView.swift */; };
 		FA9687E92B8338E100123476 /* NamedNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687E82B8338E100123476 /* NamedNode.swift */; };
@@ -21,8 +22,6 @@
 		FAD661F82B81D1210000D2A6 /* HeaderViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */; };
 		FAD661FA2B81D1210000D2A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD661F92B81D1210000D2A6 /* ContentView.swift */; };
 		FAD661FC2B81D1220000D2A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD661FB2B81D1220000D2A6 /* Assets.xcassets */; };
-		FAE3C1712B81F7B700242A99 /* ClassDump.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD6620C2B81D2990000D2A6 /* ClassDump.framework */; };
-		FAE3C1722B81F7B700242A99 /* ClassDump.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAD6620C2B81D2990000D2A6 /* ClassDump.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,42 +32,7 @@
 			remoteGlobalIDString = FAD661F32B81D1210000D2A6;
 			remoteInfo = HeaderViewer;
 		};
-		FAD6620B2B81D2990000D2A6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FA2A00DC23ADD19D00B52F1D;
-			remoteInfo = ClassDump;
-		};
-		FAD6620D2B81D2990000D2A6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FA2A011923AEB15700B52F1D;
-			remoteInfo = ClassDumpTests;
-		};
-		FAE3C16F2B81F7AC00242A99 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = FA2A00DB23ADD19D00B52F1D;
-			remoteInfo = ClassDump;
-		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		FAE3C1732B81F7B700242A99 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				FAE3C1722B81F7B700242A99 /* ClassDump.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		FA53C6932B8BF70200FC1A15 /* HeaderViewerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HeaderViewerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,7 +54,6 @@
 		FAD661F92B81D1210000D2A6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FAD661FB2B81D1220000D2A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FAD661FD2B81D1220000D2A6 /* HeaderViewer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeaderViewer.entitlements; sourceTree = "<group>"; };
-		FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ClassDump.xcodeproj; path = ClassDumpRuntime/ClassDump.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAE3C1712B81F7B700242A99 /* ClassDump.framework in Frameworks */,
+				E968E33A2BE68CD100B0A1B9 /* ClassDumpRuntime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,7 +87,6 @@
 		FAD661EB2B81D1210000D2A6 = {
 			isa = PBXGroup;
 			children = (
-				FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */,
 				FAD661F62B81D1210000D2A6 /* HeaderViewer */,
 				FA53C6942B8BF70200FC1A15 /* HeaderViewerUITests */,
 				FAD661F52B81D1210000D2A6 /* Products */,
@@ -163,15 +125,6 @@
 			path = HeaderViewer;
 			sourceTree = "<group>";
 		};
-		FAD662072B81D2990000D2A6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FAD6620C2B81D2990000D2A6 /* ClassDump.framework */,
-				FAD6620E2B81D2990000D2A6 /* ClassDumpTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		FAD6620F2B81D2C90000D2A6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -207,14 +160,15 @@
 				FAD661F02B81D1210000D2A6 /* Sources */,
 				FAD661F12B81D1210000D2A6 /* Frameworks */,
 				FAD661F22B81D1210000D2A6 /* Resources */,
-				FAE3C1732B81F7B700242A99 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				FAE3C1702B81F7AC00242A99 /* PBXTargetDependency */,
 			);
 			name = HeaderViewer;
+			packageProductDependencies = (
+				E968E3392BE68CD100B0A1B9 /* ClassDumpRuntime */,
+			);
 			productName = HeaderViewer;
 			productReference = FAD661F42B81D1210000D2A6 /* HeaderViewer.app */;
 			productType = "com.apple.product-type.application";
@@ -247,14 +201,11 @@
 				Base,
 			);
 			mainGroup = FAD661EB2B81D1210000D2A6;
+			packageReferences = (
+				E968E3382BE68CD100B0A1B9 /* XCRemoteSwiftPackageReference "ClassDumpRuntime" */,
+			);
 			productRefGroup = FAD661F52B81D1210000D2A6 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = FAD662072B81D2990000D2A6 /* Products */;
-					ProjectRef = FAD662062B81D2990000D2A6 /* ClassDump.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				FAD661F32B81D1210000D2A6 /* HeaderViewer */,
@@ -262,23 +213,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		FAD6620C2B81D2990000D2A6 /* ClassDump.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ClassDump.framework;
-			remoteRef = FAD6620B2B81D2990000D2A6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FAD6620E2B81D2990000D2A6 /* ClassDumpTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ClassDumpTests.xctest;
-			remoteRef = FAD6620D2B81D2990000D2A6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		FA53C6912B8BF70200FC1A15 /* Resources */ = {
@@ -333,11 +267,6 @@
 			isa = PBXTargetDependency;
 			target = FAD661F32B81D1210000D2A6 /* HeaderViewer */;
 			targetProxy = FA53C6992B8BF70200FC1A15 /* PBXContainerItemProxy */;
-		};
-		FAE3C1702B81F7AC00242A99 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ClassDump;
-			targetProxy = FAE3C16F2B81F7AC00242A99 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -512,7 +441,7 @@
 				CODE_SIGN_ENTITLEMENTS = HeaderViewer/HeaderViewer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7P56K8K4MY;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -552,7 +481,7 @@
 				CODE_SIGN_ENTITLEMENTS = HeaderViewer/HeaderViewer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7P56K8K4MY;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -615,6 +544,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E968E3382BE68CD100B0A1B9 /* XCRemoteSwiftPackageReference "ClassDumpRuntime" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/leptos-null/ClassDumpRuntime";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E968E3392BE68CD100B0A1B9 /* ClassDumpRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E968E3382BE68CD100B0A1B9 /* XCRemoteSwiftPackageReference "ClassDumpRuntime" */;
+			productName = ClassDumpRuntime;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FAD661EC2B81D1210000D2A6 /* Project object */;
 }

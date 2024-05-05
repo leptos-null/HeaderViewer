@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ClassDump
+import ClassDumpRuntime
 
 struct ContentView: View {
     @State private var selectedObject: RuntimeObjectType?
