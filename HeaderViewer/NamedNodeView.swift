@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ClassDump
+import ClassDumpRuntime
 
 struct NamedNodeView: View {
     let node: NamedNode

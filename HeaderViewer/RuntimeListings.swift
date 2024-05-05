@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import ClassDump
+import ClassDumpRuntime
 import MachO.dyld
 import OSLog
 

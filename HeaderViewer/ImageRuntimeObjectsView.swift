@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ClassDump
+import ClassDumpRuntime
 
 private enum ImageLoadState {
     case notLoaded
