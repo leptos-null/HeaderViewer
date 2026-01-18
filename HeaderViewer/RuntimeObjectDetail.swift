@@ -29,6 +29,7 @@ struct RuntimeObjectDetail: View {
     @State private var stripDuplicates: Bool = true
     @State private var stripSynthesized: Bool = true
     @State private var addSymbolImageComments: Bool = false
+    @State private var expandIvarRecordTypes: Bool = false
     
     @AppStorage("code_font_size") private var fontSize: Int = Self.defaultFontSize
     
@@ -41,6 +42,7 @@ struct RuntimeObjectDetail: View {
         options.stripCtorMethod = true
         options.stripDtorMethod = true
         options.addSymbolImageComments = addSymbolImageComments
+        options.expandIvarRecordTypes = expandIvarRecordTypes
         return options
     }
     
@@ -78,6 +80,7 @@ struct RuntimeObjectDetail: View {
                     Toggle("Strip duplicates", isOn: $stripDuplicates)
                     Toggle("Strip synthesized", isOn: $stripSynthesized)
                     Toggle("Add symbol comments", isOn: $addSymbolImageComments)
+                    Toggle("Expand ivar records", isOn: $expandIvarRecordTypes)
                 } label: {
                     Label("Generation options", systemImage: "ellipsis.curlybraces")
                 }
