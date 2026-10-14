@@ -43,6 +43,7 @@ struct RuntimeObjectDetail: View {
         options.stripDtorMethod = true
         options.addSymbolImageComments = addSymbolImageComments
         options.expandIvarRecordTypes = expandIvarRecordTypes
+        options.methodParameterNameResolver = CDMethodParameterNameSimpleTransformResolver
         return options
     }
     
