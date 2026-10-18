@@ -12,10 +12,10 @@ jobs:
     # needed to be able to create a Release
     permissions:
       contents: write
-    runs-on: macos-14
+    runs-on: macos-26
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
