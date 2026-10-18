@@ -21,6 +21,8 @@ struct NamedNodeView: View {
     }
     
     var body: some View {
+        let navigationTitle: String = (node.name.isEmpty && node.parent == nil) ? "/" : node.name
+        
         List(children, id: \.name) { child in
             NavigationLink(value: child) {
                 HStack {
@@ -43,7 +45,8 @@ struct NamedNodeView: View {
         }
         .searchable(text: $searchText)
         .autocorrectionDisabled() // turn of auto-correct for the search field
-        .navigationTitle((node.name.isEmpty && node.parent == nil) ? "/" : node.name)
+        .navigationTitle(navigationTitle)
+        .sidebarBackButtonWorkaround(navigationTitle: navigationTitle)
     }
     
     private func couldLoad(node: NamedNode) -> Bool {

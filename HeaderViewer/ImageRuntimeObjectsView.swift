@@ -169,6 +169,7 @@ struct ImageRuntimeObjectsView: View {
             }
         }
         .navigationTitle(viewModel.imageName)
+        .sidebarBackButtonWorkaround(navigationTitle: viewModel.imageName)
     }
 }
 

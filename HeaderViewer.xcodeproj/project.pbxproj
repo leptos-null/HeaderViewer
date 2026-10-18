@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FA53C69F2B8BF82000FC1A15 /* GatherScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA53C69E2B8BF82000FC1A15 /* GatherScreenshots.swift */; };
 		FA6BEDCB2BD5941500D20C6F /* RuntimeObjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BEDCA2BD5941500D20C6F /* RuntimeObjectsView.swift */; };
+		FA864195307F261D00D47217 /* SidebarBackButtonWorkaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA864194307F261D00D47217 /* SidebarBackButtonWorkaround.swift */; };
 		FA9687E92B8338E100123476 /* NamedNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687E82B8338E100123476 /* NamedNode.swift */; };
 		FA9687EB2B833C1700123476 /* RuntimeObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687EA2B833C1700123476 /* RuntimeObjectType.swift */; };
 		FA9687ED2B833C3200123476 /* RuntimeObjectDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9687EC2B833C3200123476 /* RuntimeObjectDetail.swift */; };
@@ -75,6 +76,7 @@
 		FA53C69E2B8BF82000FC1A15 /* GatherScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatherScreenshots.swift; sourceTree = "<group>"; };
 		FA53C6A02B8BFC0E00FC1A15 /* HeaderViewerUITests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeaderViewerUITests.entitlements; sourceTree = "<group>"; };
 		FA6BEDCA2BD5941500D20C6F /* RuntimeObjectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeObjectsView.swift; sourceTree = "<group>"; };
+		FA864194307F261D00D47217 /* SidebarBackButtonWorkaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarBackButtonWorkaround.swift; sourceTree = "<group>"; };
 		FA9687E72B82E37E00123476 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FA9687E82B8338E100123476 /* NamedNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedNode.swift; sourceTree = "<group>"; };
 		FA9687EA2B833C1700123476 /* RuntimeObjectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeObjectType.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 			children = (
 				FAD661F72B81D1210000D2A6 /* HeaderViewerApp.swift */,
 				FAD661F92B81D1210000D2A6 /* ContentView.swift */,
+				FA864194307F261D00D47217 /* SidebarBackButtonWorkaround.swift */,
 				FA6BEDCA2BD5941500D20C6F /* RuntimeObjectsView.swift */,
 				FAAA8C162B8B072100BD85B4 /* ListView.swift */,
 				FAAA8C122B857A1300BD85B4 /* RuntimeListings.swift */,
@@ -323,6 +326,7 @@
 				FAAA8C172B8B072100BD85B4 /* ListView.swift in Sources */,
 				FA9687F12B8366B500123476 /* NamedNodeView.swift in Sources */,
 				FA9687EB2B833C1700123476 /* RuntimeObjectType.swift in Sources */,
+				FA864195307F261D00D47217 /* SidebarBackButtonWorkaround.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
