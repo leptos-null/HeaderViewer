@@ -38,8 +38,9 @@ jobs:
           # ad-hoc sign ("-")
           #   1. since Apple silicon won't run unsigned code
           #   2. so the entitlements are embedded
+          # disable hardened runtime since its library validation rejects ad-hoc signed frameworks (no Team ID)
           xcodebuild \
-            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_IDENTITY="-" ENABLE_HARDENED_RUNTIME=NO \
             archive -scheme HeaderViewer \
             -destination 'generic/platform=macOS' \
             -archivePath macos_archive \
