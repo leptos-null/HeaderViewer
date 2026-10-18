@@ -33,6 +33,22 @@ jobs:
           mv ios_archive.xcarchive/Products/Applications Payload
           zip -yqr HeaderViewer.ipa Payload
 
+      - name: Archive macOS app
+        run: |
+          # ad-hoc sign ("-")
+          #   1. since Apple silicon won't run unsigned code
+          #   2. so the entitlements are embedded
+          xcodebuild \
+            CODE_SIGN_IDENTITY="-" \
+            archive -scheme HeaderViewer \
+            -destination 'generic/platform=macOS' \
+            -archivePath macos_archive \
+            -quiet
+
+      - name: Package macOS app
+        run: |
+          ditto -c -k --keepParent macos_archive.xcarchive/Products/Applications/HeaderViewer.app HeaderViewer-macOS.zip
+
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -41,4 +57,4 @@ jobs:
           gh release create "${TAG}" --draft \
             --title "Automatic Release" \
             --target "${GITHUB_SHA}" \
-            HeaderViewer.ipa
+            HeaderViewer.ipa HeaderViewer-macOS.zip
